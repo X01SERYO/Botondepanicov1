@@ -9,7 +9,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BotonDePanicoV1">
-        <activity android:name=".PopUp"></activity>
         <activity android:name=".RecibirAlertas" />
         <activity android:name=".SolicitandoAyuda" />
         <activity android:name=".PantallaPrincipal" />

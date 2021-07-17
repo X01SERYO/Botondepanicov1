@@ -4,73 +4,111 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:onClick="onClickInicarSesion"
+    android:background="#95E0E3"
     tools:context=".Login">
 
 
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="230dp"
+        android:layout_height="230dp"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo_circular" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
-        android:layout_width="match_parent"
+        style="@style/AppTheme.EditTextError"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:background="#95E0E3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/a"
+            android:id="@+id/text_input_layout_outlined"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:hint="Usuario"
+            android:textSize="20dp"
+            app:boxBackgroundColor="#95E0E3"
+            app:boxBackgroundMode="outline"
+            app:hintTextColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/error_user">
 
-            <EditText
-                android:id="@+id/editTextTextPersonName3"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/user"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="User"
-                android:inputType="textPersonName"
-                android:paddingTop="20dp"
-                android:paddingBottom="20dp"
-                app:layout_constraintBottom_toTopOf="@+id/textInputLayout"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="2dp"
+                android:maxLines="1" android:inputType="text"
+                android:layout_marginEnd="2dp"
+                android:layout_marginBottom="2dp"
+                android:textSize="20dp" />
+
         </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/error_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/red"
+            app:layout_constraintBottom_toTopOf="@+id/text_input_layout_outlined1"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout"
+            android:id="@+id/text_input_layout_outlined1"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
+            android:hint="Contraseña"
+            android:textSize="20dp"
+            app:boxBackgroundColor="#95E0E3"
+            app:boxBackgroundMode="outline"
+            app:hintTextColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/error_password"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/a"
             app:passwordToggleEnabled="true">
 
-            <EditText
-                android:id="@+id/editTextTextPassword"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Password"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginBottom="2dp"
                 android:inputType="textPassword"
-                android:paddingTop="20dp"
-                android:paddingBottom="20dp" />
+                android:textSize="20dp" />
 
         </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/error_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/red"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <Button
-        android:id="@+id/iniciarSesionSinCredenciales"
+    <TextView
+        android:id="@+id/error_validacion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="onClickInicarSesionSinCredenciales"
-        android:text="Ingresar sin usuario"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="@color/red"
+        app:layout_constraintBottom_toTopOf="@+id/iniciarSesion"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
@@ -79,10 +117,35 @@
         android:id="@+id/iniciarSesion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Iniciar sesion"
-        app:layout_constraintBottom_toTopOf="@+id/iniciarSesionSinCredenciales"
+        android:backgroundTint="#166265"
+        android:onClick="onClickInicarSesion"
+        android:text="Iniciar sesión"
+        app:layout_constraintBottom_toTopOf="@+id/registrarme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
+
+    <Button
+        android:id="@+id/registrarme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#397B6E"
+        android:text="REGISTRAME"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
+
+    <Button
+        android:id="@+id/iniciarSesionSinCredenciales"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#239DA2"
+        android:onClick="onClickInicarSesionSinCredenciales"
+        android:text="Ingresar sin usuario"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/registrarme" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
