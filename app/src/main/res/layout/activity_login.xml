@@ -32,7 +32,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/text_input_layout_outlined"
+            android:id="@+id/text_input_layout_outlined_user"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -61,11 +61,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/red"
-            app:layout_constraintBottom_toTopOf="@+id/text_input_layout_outlined1"
+            app:layout_constraintBottom_toTopOf="@+id/text_input_layout_outlined_password"
             app:layout_constraintEnd_toEndOf="parent" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/text_input_layout_outlined1"
+            android:id="@+id/text_input_layout_outlined_password"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -130,6 +130,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="#397B6E"
+        android:onClick="onClickRegistro"
         android:text="REGISTRAME"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

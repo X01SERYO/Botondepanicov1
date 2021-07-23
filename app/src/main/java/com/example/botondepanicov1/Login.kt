@@ -1,9 +1,14 @@
 package com.example.botondepanicov1
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_login.*
 
 class Login : AppCompatActivity() {
@@ -11,6 +16,9 @@ class Login : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        val permissionCheck = ContextCompat.checkSelfPermission(
+            this, Manifest.permission.GET_ACCOUNTS
+        )
     }
 
     fun onClickInicarSesion(v: View) {
@@ -41,6 +49,11 @@ class Login : AppCompatActivity() {
 
     fun onClickInicarSesionSinCredenciales(v: View) {
         val intent = Intent(this, PantallaPrincipal::class.java)
+        startActivity(intent)
+    }
+
+    fun onClickRegistro(v:View){
+        val intent = Intent(this,Registro::class.java)
         startActivity(intent)
     }
 }
