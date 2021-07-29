@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.activity_login.*
 
 class Login : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        title = "BOTÓN DE PÁNICO"
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 

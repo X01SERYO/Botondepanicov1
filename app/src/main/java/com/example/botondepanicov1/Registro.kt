@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.activity_registro.*
 
 class Registro : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        title = "REGISTRO"
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registro)
 
@@ -26,10 +27,6 @@ class Registro : AppCompatActivity() {
         inicializar_spinner_genero()
         inicializar_spinner_rh()
         inicializar_spinner_signo()
-
-
-
-
     }
 
     fun inicializar_spinner_signo(){
