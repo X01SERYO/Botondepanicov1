@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.activity_registro.*
 
 class Registro : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTitle("REGISTRO");
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registro)
 
