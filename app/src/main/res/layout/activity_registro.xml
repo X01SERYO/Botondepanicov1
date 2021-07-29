@@ -385,9 +385,6 @@
                     app:layout_constraintTop_toBottomOf="@+id/error_fecha_nacimiento"
                     app:passwordToggleEnabled="true">
 
-<<<<<<< Updated upstream
-            </androidx.constraintlayout.widget.ConstraintLayout>
-=======
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/password"
                         android:layout_width="match_parent"
@@ -416,7 +413,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="5dp"
-                    android:hint="Confirme contraseña"
+                    android:hint="Confirmar contraseña"
                     android:textSize="20dp"
                     app:boxBackgroundColor="#95E0E3"
                     app:boxBackgroundMode="outline"
@@ -425,7 +422,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/error_password"
                     app:passwordToggleEnabled="true">
->>>>>>> Stashed changes
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/password_confirmation"
