@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "973722830614",
+    "project_id": "botonpanico-590a9",
+    "storage_bucket": "botonpanico-590a9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:973722830614:android:1f34c5cdc6f0bdc3cf3237",
+        "android_client_info": {
+          "package_name": "com.example.botondepanicov1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "973722830614-8brngei3sk77lp48npuuikvus3ed4s26.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWRa5wW4IUpDOmg4jct-s0mJmmO6J8HVE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "973722830614-8brngei3sk77lp48npuuikvus3ed4s26.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

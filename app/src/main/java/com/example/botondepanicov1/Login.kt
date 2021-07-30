@@ -9,7 +9,12 @@ import android.util.Log
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.activity_login.error_password
+import kotlinx.android.synthetic.main.activity_login.password
+import kotlinx.android.synthetic.main.activity_registro.*
 
 class Login : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,10 +25,41 @@ class Login : AppCompatActivity() {
         val permissionCheck = ContextCompat.checkSelfPermission(
             this, Manifest.permission.GET_ACCOUNTS
         )
+
+
     }
 
-    fun onClickInicarSesion(v: View) {
-        val intent = Intent(this, PantallaPrincipal::class.java)
+
+    fun iniciarSesion(v: View){
+
+        if( user.text!!.isNotEmpty() &&  password.text!!.isNotEmpty() ){
+            FirebaseAuth.getInstance().signInWithEmailAndPassword(user.text.toString(),password.text.toString()).addOnCompleteListener {
+
+                FirebaseDatabase.getInstance().getReference("/User")
+
+                if(it.isSuccessful){
+
+                    val intent = Intent(this,PantallaPrincipal::class.java)
+                    startActivity(intent)
+
+
+
+                }else {
+
+                    falloInisioDeSesion()
+                }
+
+            }
+
+        }else{
+            falloInisioDeSesion()
+        }
+
+    }
+
+
+    fun falloInisioDeSesion() {
+
         if (user.text.toString().isEmpty()) {
             error_user.text = ("El usuario es necesario")
             error_user.error = ""
