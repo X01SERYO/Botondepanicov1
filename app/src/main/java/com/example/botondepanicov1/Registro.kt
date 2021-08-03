@@ -4,8 +4,6 @@ package com.example.botondepanicov1
 import android.content.Intent
 import android.os.Bundle
 
-import android.util.Log
-
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -16,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity
 
 import kotlinx.android.synthetic.main.activity_registro.*
 import java.util.*
-import com.example.botondepanicov1.databinding.ActivityRegistroBinding
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_registro.error_password
@@ -30,184 +27,179 @@ class Registro : AppCompatActivity() {
         title = "REGISTRO"
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registro)
-        /////////////////////////////////////////////////////////////////////////////////////////
-
-        val email= email.text.toString()
-        val contraseña = password.text.toString()
-
-
-        registrar.setOnClickListener(){
-            autentificar()
-        }
-
-       //////////////////////////////////////////////////////////////////////////////////////////
-        inicializar_spinner_documento()
-        inicializar_spinner_genero()
-        inicializar_spinner_rh()
-        inicializar_spinner_signo()
+        inicializarSpinnerDocumento()
+        inicializarSpinnerGenero()
+        inicializarSpinnerRh()
+        inicializarSpinnerSigno()
     }
 
-    fun autentificar(){
-        if( email.text!!.isNotEmpty() &&password_confirmation.text!!.isNotEmpty() &&  password.text!!.isNotEmpty() && password_confirmation.text.toString()==password.text.toString()){
-            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email.text.toString(),password.text.toString()).addOnCompleteListener {
+    fun onClickRegistrar(v: View) {
+        //CONTROLAR QUE SI HAY ERROR, NO PASE A AUTENTIFICAR
+        if (falloRegistro()) {
+            autentificar()
+        }
+    }
 
-                if(it.isSuccessful) {
-                    Log.d("user", "creado con exito el ${it.result?.user?.uid}")
-                   // return@addOnCompleteListener
-
+    private fun autentificar() {
+        FirebaseAuth.getInstance()
+            .createUserWithEmailAndPassword(email.text.toString(), password.text.toString())
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
                     val intent = Intent(this, Login::class.java)
                     startActivity(intent)
-
-                }
-                else{
+                } else {
                     showAlet1()
                 }
             }
-        }else{
-
-            falloRegistro()
-
-        }
-
-
     }
 
-    fun falloRegistro() {
-
+    private fun falloRegistro(): Boolean {
+        var resultado = true
+        // Validcion campo email nonull
         if (email.text.toString().isEmpty()) {
-            error_email.text = ("El Email es necesario")
+            error_email.text = ("Ingrese su correo electrónico ")
             error_email.error = ""
+            resultado = false
         } else {
             error_email.text = null
             error_email.error = null
         }
+        // Validcion campo password nonull
         if (password.text.toString().isEmpty()) {
-            error_password.text = ("La contraseña es necesaria")
+            error_password.text = ("Ingrese la contraseña ")
             error_password.error = ""
+            resultado = false
         } else {
             error_password.text = null
             error_password.error = null
         }
-        if (password_confirmation.text.toString().isEmpty()) {
-            error_confirmation.text = ("La contraseña es necesaria")
-            error_confirmation.error = ""
-        } else if(password_confirmation.text.toString()!=password.text.toString()){
-            error_password.text = ("Las contraseñas deben de ser iguales")
-            error_password.error = ""
-            error_confirmation.text = ("Las contraseñas deben de ser iguales")
-            error_confirmation.error = ""
+        // Validcion campo password_confirmation nonull
+        when {
+            password_confirmation.text.toString().isEmpty() -> {
+                error_confirmation.text = ("Ingrese la contraseña ")
+                error_confirmation.error = ""
+            }
+            password_confirmation.text.toString() != password.text.toString() -> {
+                error_password.text = ("Las contraseñas deben de ser iguales ")
+                error_password.error = ""
+                error_confirmation.text = ("Las contraseñas deben de ser iguales ")
+                error_confirmation.error = ""
 
+            }
+            else -> {
+                error_confirmation.text = null
+                error_confirmation.error = null
+            }
         }
-        else {
-            error_confirmation.text = null
-            error_confirmation.error = null
-        }
-        /*if (password_confirmation.text.toString().isNotEmpty()!=password.text.toString().isNotEmpty()) {
-            error_password.text = ("Las contraseñas deben de ser iguales")
-            error_password.error = ""
-            error_confirmation.text = ("Las contraseñas deben de ser iguales")
-            error_confirmation.error = ""
+        //validacion spinner documento
+        if (document_type.selectedItem == "Seleccione") {
+            error_document_type.text = ("Seleccione una opción ")
+            error_document_type.error = ""
+            resultado = false
         } else {
-            error_password.text = null
-            error_password.error = null
-            error_confirmation.text = null
-            error_confirmation.error = null
-        }*/
+            error_document_type.text = null
+            error_document_type.error = null
+        }
+        //Validacion del campo numero documento
+        if (document_number.text.toString().isEmpty()) {
+            error_document_number.text = ("Ingrese su número de documento ")
+            error_document_number.error = ""
+            resultado = false
+        } else {
+            error_document_number.text = null
+            error_document_number.error = null
+        }
+        //Validacion del campo nombre
+        if (first_name.text.toString().isEmpty()) {
+            error_first_name.text = ("Ingrese sus nombres ")
+            error_first_name.error = ""
+            resultado = false
+        } else {
+            error_first_name.text = null
+            error_first_name.error = null
+        }
+        //Validacion del campo apellido
+        if (last_name.text.toString().isEmpty()) {
+            error_last_name.text = ("Ingrese sus apellidos ")
+            error_last_name.error = ""
+            resultado = false
+        } else {
+            error_last_name.text = null
+            error_last_name.error = null
+        }
+        //validacion spinner genero
+        if (gender.selectedItem == "Seleccione") {
+            error_gender.text = ("Seleccione una opción ")
+            error_gender.error = ""
+            resultado = false
+        } else {
+            error_gender.text = null
+            error_gender.error = null
+        }
+        //validacion spinner rh
+        if (rh.selectedItem == "Seleccione") {
+            error_rh.text = ("Seleccione una opción ")
+            error_rh.error = ""
+            resultado = false
+        } else {
+            error_rh.text = null
+            error_rh.error = null
+        }
+        //Validacion del campo fecha nacimiento
+        if (fecha_nacimiento.text.toString().isEmpty()) {
+            error_fecha_nacimiento.text = ("Ingrese su fecha de nacimiento ")
+            error_fecha_nacimiento.error = ""
+            resultado = false
+        } else {
+            error_fecha_nacimiento.text = null
+            error_fecha_nacimiento.error = null
+        }
 
+        return resultado
     }
-
-
 
     private fun showAlet1() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Error")
         builder.setMessage("Datos erroneos o ya se ha verificado una cuenta con éste Email")
-        builder.setPositiveButton("Aceptar",null)
+        builder.setPositiveButton("Aceptar", null)
         val dialogo: AlertDialog = builder.create()
         dialogo.show()
     }
 
+    private fun inicializarSpinnerSigno() {
+        val spinnerSigno = findViewById<Spinner>(R.id.signo)
+        val listaSigno = resources.getStringArray(R.array.signo)
+        val adaptadorSigno =
+            ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, listaSigno)
 
-
-
-
-    fun inicializar_spinner_signo(){
-        val spinner_signo = findViewById<Spinner>(R.id.signo)
-        val lista_signo = resources.getStringArray(R.array.signo)
-        val adaptador_signo =
-            ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, lista_signo)
-
-        spinner_signo.adapter = adaptador_signo
-
-        signo.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?, view: View?, position: Int, id: Long
-            ) {
-                Toast.makeText(this@Registro, lista_signo[position], Toast.LENGTH_LONG).show()
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
-        }
+        spinnerSigno.adapter = adaptadorSigno
     }
 
-    fun inicializar_spinner_rh(){
-        val spinner_rh = findViewById<Spinner>(R.id.rh)
-        val lista_rh = resources.getStringArray(R.array.rh)
-        val adaptador_rh =
-            ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, lista_rh)
+    private fun inicializarSpinnerRh() {
+        val spinnerRh = findViewById<Spinner>(R.id.rh)
+        val listaRh = resources.getStringArray(R.array.rh)
+        val adaptadorRh =
+            ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, listaRh)
 
-        spinner_rh.adapter = adaptador_rh
-
-        rh.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?, view: View?, position: Int, id: Long
-            ) {
-                Toast.makeText(this@Registro, lista_rh[position], Toast.LENGTH_LONG).show()
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
-        }
+        spinnerRh.adapter = adaptadorRh
     }
 
-    fun inicializar_spinner_genero(){
-        val spinner_genero = findViewById<Spinner>(R.id.gender)
-        val lista_genero = resources.getStringArray(R.array.genero)
-        val adaptador_genero =
-            ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, lista_genero)
+    private fun inicializarSpinnerGenero() {
+        val spinnerGenero = findViewById<Spinner>(R.id.gender)
+        val listaGenero = resources.getStringArray(R.array.genero)
+        val adaptadorGenero =
+            ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, listaGenero)
 
-        spinner_genero.adapter = adaptador_genero
-
-        gender.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?, view: View?, position: Int, id: Long
-            ) {
-                Toast.makeText(this@Registro, lista_genero[position], Toast.LENGTH_LONG).show()
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
-        }
+        spinnerGenero.adapter = adaptadorGenero
     }
 
-    fun inicializar_spinner_documento(){
-        val spinner_documento = findViewById<Spinner>(R.id.document_type)
-        val lista_docuemnto = resources.getStringArray(R.array.tipos_documento)
-        val adaptador_docuemnto =
-            ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, lista_docuemnto)
+    private fun inicializarSpinnerDocumento() {
+        val spinnerDocumento = findViewById<Spinner>(R.id.document_type)
+        val listaDocumento = resources.getStringArray(R.array.tipos_documento)
+        val adaptadorDocumento =
+            ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, listaDocumento)
 
-        spinner_documento.adapter = adaptador_docuemnto
-
-        document_type.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?, view: View?, position: Int, id: Long
-            ) {
-                Toast.makeText(this@Registro, lista_docuemnto[position], Toast.LENGTH_LONG).show()
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
-        }
+        spinnerDocumento.adapter = adaptadorDocumento
     }
 }

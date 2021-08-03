@@ -21,48 +21,45 @@ class Login : AppCompatActivity() {
         title = "BOTÓN DE PÁNICO"
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
-        val permissionCheck = ContextCompat.checkSelfPermission(
-            this, Manifest.permission.GET_ACCOUNTS
-        )
-
-
     }
 
 
     fun iniciarSesion(v: View){
-
-        if( user.text!!.isNotEmpty() &&  password.text!!.isNotEmpty() ){
-            FirebaseAuth.getInstance().signInWithEmailAndPassword(user.text.toString(),password.text.toString()).addOnCompleteListener {
-
-                FirebaseDatabase.getInstance().getReference("/User")
-
-                if(it.isSuccessful){
-
-                    val intent = Intent(this,PantallaPrincipal::class.java)
-                    startActivity(intent)
-
-
-
-                }else {
-
-                    falloInisioDeSesion()
-                }
-
-            }
-
-        }else{
-            falloInisioDeSesion()
+        //CONTROLAR QUE SI HAY ERROR, NO PASE A AUTENTIFICAR
+        if (falloInisioDeSesion()){
+            validacionFirebase()
         }
-
     }
 
+    private fun validacionFirebase(){
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(user.text.toString(),password.text.toString()).addOnCompleteListener {
+            FirebaseDatabase.getInstance().getReference("/User")
+            if(it.isSuccessful){
+                val intent = Intent(this,PantallaPrincipal::class.java)
+                startActivity(intent)
+            }else {
+                credencialesInvalidas()
+            }
+        }
+    }
 
-    fun falloInisioDeSesion() {
+    private fun credencialesInvalidas(){
+        if (ComprobacionCredenciales().validacion(user.text.toString(), password.text.toString())) {
+            error_validacion.text = null
+            error_validacion.error = null
+            startActivity(intent)
+        } else {
+            error_validacion.text = ("Credenciales invalidas")
+            error_validacion.error = ""
+        }
+    }
 
+    private fun falloInisioDeSesion(): Boolean {
+        var resultado = true
         if (user.text.toString().isEmpty()) {
             error_user.text = ("El usuario es necesario")
             error_user.error = ""
+            resultado = false
         } else {
             error_user.text = null
             error_user.error = null
@@ -70,18 +67,12 @@ class Login : AppCompatActivity() {
         if (password.text.toString().isEmpty()) {
             error_password.text = ("La contraseña es necesaria")
             error_password.error = ""
+            resultado = false
         } else {
             error_password.text = null
             error_password.error = null
         }
-        if (ComprobacionCredenciales().validacion(user.text.toString(), password.text.toString())) {
-            startActivity(intent)
-            error_validacion.text = null
-            error_validacion.error = null
-        } else {
-            error_validacion.text = ("Credenciales invalidas")
-            error_validacion.error = ""
-        }
+        return resultado
     }
 
     fun onClickInicarSesionSinCredenciales(v: View) {

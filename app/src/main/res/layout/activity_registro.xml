@@ -62,6 +62,7 @@
                     android:id="@+id/error_document_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
                     android:textColor="@color/red"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/text_input_layout_outlined_document_type" />
@@ -92,6 +93,7 @@
                         android:layout_marginBottom="2dp"
                         android:inputType="number"
                         android:maxLines="1"
+                        android:focusable="false"
                         android:textSize="20dp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -100,7 +102,7 @@
                     android:id="@+id/error_document_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="5dp"
+                    android:layout_marginEnd="10dp"
                     android:textColor="@color/red"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/text_input_layout_outlined_document_number" />
@@ -131,6 +133,7 @@
                         android:layout_marginBottom="2dp"
                         android:inputType="text"
                         android:maxLines="1"
+                        android:focusable="false"
                         android:textSize="20dp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -139,7 +142,7 @@
                     android:id="@+id/error_first_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="5dp"
+                    android:layout_marginEnd="10dp"
                     android:textColor="@color/red"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/text_input_layout_outlined_first_name" />
@@ -149,6 +152,7 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
                     android:layout_marginEnd="5dp"
                     android:hint="Apellidos"
                     android:textSize="20dp"
@@ -167,6 +171,7 @@
                         android:layout_marginTop="2dp"
                         android:layout_marginEnd="2dp"
                         android:layout_marginBottom="2dp"
+                        android:focusable="false"
                         android:inputType="text"
                         android:maxLines="1"
                         android:textSize="20dp" />
@@ -177,7 +182,7 @@
                     android:id="@+id/error_last_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="5dp"
+                    android:layout_marginEnd="10dp"
                     android:textColor="@color/red"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/text_input_layout_outlined_last_name" />
@@ -187,6 +192,7 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
                     android:layout_marginEnd="5dp"
                     android:hint="Correo electrónico"
                     android:textSize="20dp"
@@ -204,6 +210,7 @@
                         android:layout_marginStart="2dp"
                         android:layout_marginTop="2dp"
                         android:layout_marginEnd="2dp"
+                        android:focusable="false"
                         android:layout_marginBottom="2dp"
                         android:inputType="text"
                         android:maxLines="1"
@@ -215,7 +222,7 @@
                     android:id="@+id/error_email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="5dp"
+                    android:layout_marginEnd="10dp"
                     android:textColor="@color/red"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/text_input_layout_outlined_email" />
@@ -260,6 +267,7 @@
                     android:id="@+id/error_gender"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
                     android:textColor="@color/red"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/text_input_layout_outlined_geneder" />
@@ -302,12 +310,13 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/text_input_layout_outlined_signo"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="181dp"
+                    android:layout_width="90dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:background="@drawable/borde"
                     app:boxBackgroundColor="#95E0E3"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/text_input_layout_outlined_rh"
                     app:layout_constraintTop_toBottomOf="@+id/error_gender">
 
                     <Spinner
@@ -326,6 +335,7 @@
                     android:id="@+id/error_rh"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
                     android:textColor="@color/red"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/text_input_layout_outlined_rh" />
@@ -353,6 +363,7 @@
                         android:layout_marginStart="2dp"
                         android:layout_marginTop="2dp"
                         android:layout_marginEnd="2dp"
+                        android:focusable="false"
                         android:layout_marginBottom="2dp"
                         android:inputType="text"
                         android:maxLines="1"
@@ -364,7 +375,7 @@
                     android:id="@+id/error_fecha_nacimiento"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="5dp"
+                    android:layout_marginEnd="10dp"
                     android:textColor="@color/red"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/text_input_layout_outlined_fecha_nacimiento" />
@@ -395,6 +406,7 @@
                         android:layout_marginEnd="2dp"
                         android:layout_marginBottom="2dp"
                         android:inputType="textPassword"
+                        android:focusable="false"
                         android:textSize="20dp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -403,6 +415,7 @@
                     android:id="@+id/error_password"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
                     android:textColor="@color/red"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/text_input_layout_outlined_password" />
@@ -433,6 +446,7 @@
                         android:layout_marginEnd="2dp"
                         android:layout_marginBottom="2dp"
                         android:inputType="textPassword"
+                        android:focusable="false"
                         android:textSize="20dp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -441,6 +455,7 @@
                     android:id="@+id/error_confirmation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
                     android:textColor="@color/red"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/text_input_layout_outlined_password_confirmation" />
@@ -452,6 +467,7 @@
                     android:layout_marginBottom="5dp"
                     android:backgroundTint="#397B6E"
                     android:baselineAligned="false"
+                    android:onClick="onClickRegistrar"
                     android:text="REGISTRAME"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
