@@ -1,8 +1,10 @@
 package com.example.botondepanicov1
 
 
+import android.content.ClipData
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 
 import android.view.View
 import android.widget.AdapterView
@@ -11,10 +13,15 @@ import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
+import com.google.firebase.auth.*
 
 import kotlinx.android.synthetic.main.activity_registro.*
 import java.util.*
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_registro.error_password
 import kotlinx.android.synthetic.main.activity_registro.password
@@ -22,6 +29,10 @@ import kotlinx.android.synthetic.main.activity_registro.password
 
 class Registro : AppCompatActivity() {
 
+    private lateinit var dbReference: DatabaseReference
+    private lateinit var database: FirebaseDatabase
+    private lateinit var auth : FirebaseAuth
+    private lateinit var email : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         title = "REGISTRO"
@@ -31,6 +42,11 @@ class Registro : AppCompatActivity() {
         inicializarSpinnerGenero()
         inicializarSpinnerRh()
         inicializarSpinnerSigno()
+
+        database= FirebaseDatabase.getInstance()
+        auth = FirebaseAuth.getInstance()
+
+        dbReference=database.reference.child("User")
     }
 
     fun onClickRegistrar(v: View) {
@@ -40,12 +56,54 @@ class Registro : AppCompatActivity() {
         }
     }
 
+
+
+    private fun crearNuevaCuenta(){
+        val tipoDocumento = document_type.selectedItem.toString()
+        val documento = document_number.text.toString()
+        val nombre = first_name.text.toString()
+        val apellido = last_name.text.toString()
+
+        val genero = gender.selectedItem.toString()
+        val rh = rh.selectedItem.toString() + signo.selectedItem.toString()
+        val fecha = fecha_nacimiento.text.toString()
+        val contraseña = password.text.toString()
+
+
+
+            auth.createUserWithEmailAndPassword(email,contraseña).addOnCompleteListener(this){
+                    task ->
+                if(task.isComplete){
+
+
+                    val userBD= dbReference.child(documento)
+                    userBD.child("tipo_documento").setValue(tipoDocumento)
+                    userBD.child("documento").setValue(documento)
+                    userBD.child("nombre").setValue(nombre)
+                    userBD.child("apellido").setValue(apellido)
+                    //userBD.child("correo_electronico").setValue(email)
+                    userBD.child("genero").setValue(genero)
+                    userBD.child("rh").setValue(rh)
+                    userBD.child("fecha_nacimiento").setValue(fecha)
+                    userBD.child("contraseña").setValue(contraseña)
+
+
+                }
+            }
+
+
+
+
+    }
+
+
     private fun autentificar() {
         FirebaseAuth.getInstance()
-            .createUserWithEmailAndPassword(email.text.toString(), password.text.toString())
+            .createUserWithEmailAndPassword(email, password.text.toString())
             .addOnCompleteListener {
                 if (it.isSuccessful) {
-                    val intent = Intent(this, Login::class.java)
+                    crearNuevaCuenta()
+                   val intent = Intent(this, Login::class.java)
                     startActivity(intent)
                 } else {
                     showAlet1()
@@ -55,15 +113,7 @@ class Registro : AppCompatActivity() {
 
     private fun falloRegistro(): Boolean {
         var resultado = true
-        // Validcion campo email nonull
-        if (email.text.toString().isEmpty()) {
-            error_email.text = ("Ingrese su correo electrónico ")
-            error_email.error = ""
-            resultado = false
-        } else {
-            error_email.text = null
-            error_email.error = null
-        }
+
         // Validcion campo password nonull
         if (password.text.toString().isEmpty()) {
             error_password.text = ("Ingrese la contraseña ")
@@ -97,6 +147,7 @@ class Registro : AppCompatActivity() {
             error_document_type.error = ""
             resultado = false
         } else {
+
             error_document_type.text = null
             error_document_type.error = null
         }
@@ -106,6 +157,7 @@ class Registro : AppCompatActivity() {
             error_document_number.error = ""
             resultado = false
         } else {
+            email = document_number.text.toString() + "@gmail.com"
             error_document_number.text = null
             error_document_number.error = null
         }
@@ -161,7 +213,15 @@ class Registro : AppCompatActivity() {
     private fun showAlet1() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Error")
-        builder.setMessage("Datos erroneos o ya se ha verificado una cuenta con éste Email")
+        builder.setMessage("Datos erroneos o ya se ha verificado una cuenta con este documento")
+        builder.setPositiveButton("Aceptar", null)
+        val dialogo: AlertDialog = builder.create()
+        dialogo.show()
+    }
+    private fun showAlet2() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Error")
+        builder.setMessage("Datos erroneos o ya se ha verificado una cuenta con ta cedula")
         builder.setPositiveButton("Aceptar", null)
         val dialogo: AlertDialog = builder.create()
         dialogo.show()
