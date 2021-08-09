@@ -1,16 +1,16 @@
 package com.example.botondepanicov1
 
 
+import android.annotation.SuppressLint
+import android.app.DatePickerDialog
 import android.content.ClipData
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
@@ -49,6 +49,20 @@ class Registro : AppCompatActivity() {
         dbReference=database.reference.child("User")
     }
 
+    @SuppressLint("SetTextI18n")
+    fun onClickCalendario(v:View){
+        val c = Calendar.getInstance()
+        val dia = c.get(Calendar.DAY_OF_MONTH)
+        val mes = c.get(Calendar.MONTH)
+        val anio = c.get(Calendar.YEAR)
+        val date = DatePickerDialog( this,
+            { view, year, month, dayOfMonth ->
+                fecha_nacimiento.setText("$dayOfMonth / ${month + 1} / $year")
+                Log.v("Sergio","2 $dia $mes $anio")
+            },anio,mes,dia)
+        date.show()
+    }
+
     fun onClickRegistrar(v: View) {
         //CONTROLAR QUE SI HAY ERROR, NO PASE A AUTENTIFICAR
         if (falloRegistro()) {
@@ -56,44 +70,29 @@ class Registro : AppCompatActivity() {
         }
     }
 
-
-
     private fun crearNuevaCuenta(){
         val tipoDocumento = document_type.selectedItem.toString()
         val documento = document_number.text.toString()
         val nombre = first_name.text.toString()
         val apellido = last_name.text.toString()
-
         val genero = gender.selectedItem.toString()
         val rh = rh.selectedItem.toString() + signo.selectedItem.toString()
         val fecha = fecha_nacimiento.text.toString()
         val contraseña = password.text.toString()
-
-
-
             auth.createUserWithEmailAndPassword(email,contraseña).addOnCompleteListener(this){
                     task ->
                 if(task.isComplete){
-
-
                     val userBD= dbReference.child(documento)
                     userBD.child("tipo_documento").setValue(tipoDocumento)
                     userBD.child("documento").setValue(documento)
                     userBD.child("nombre").setValue(nombre)
                     userBD.child("apellido").setValue(apellido)
-                    //userBD.child("correo_electronico").setValue(email)
                     userBD.child("genero").setValue(genero)
                     userBD.child("rh").setValue(rh)
                     userBD.child("fecha_nacimiento").setValue(fecha)
                     userBD.child("contraseña").setValue(contraseña)
-
-
                 }
             }
-
-
-
-
     }
 
 
@@ -134,7 +133,6 @@ class Registro : AppCompatActivity() {
                 error_password.error = ""
                 error_confirmation.text = ("Las contraseñas deben de ser iguales ")
                 error_confirmation.error = ""
-
             }
             else -> {
                 error_confirmation.text = null
@@ -147,7 +145,6 @@ class Registro : AppCompatActivity() {
             error_document_type.error = ""
             resultado = false
         } else {
-
             error_document_type.text = null
             error_document_type.error = null
         }

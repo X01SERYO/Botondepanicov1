@@ -28,7 +28,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="5dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="5dp"
                     android:background="@drawable/borde"
                     app:boxBackgroundColor="#95E0E3"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -44,7 +44,8 @@
                         android:layout_marginEnd="2dp"
                         android:layout_marginBottom="10dp"
                         android:inputType="text"
-                        android:overlapAnchor="false" />
+                        android:overlapAnchor="false"
+                        tools:ignore="SpeakableTextPresentCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
@@ -72,7 +73,7 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginEnd="5dp"
                     android:hint="Número de documento"
                     android:textSize="20dp"
@@ -111,7 +112,7 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginEnd="5dp"
                     android:hint="Nombres"
                     android:textSize="20dp"
@@ -150,7 +151,7 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginEnd="5dp"
                     android:hint="Apellidos"
                     android:textSize="20dp"
@@ -191,7 +192,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="5dp"
                     android:background="@drawable/borde"
                     app:boxBackgroundColor="#95E0E3"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -207,7 +208,8 @@
                         android:layout_marginEnd="2dp"
                         android:layout_marginBottom="10dp"
                         android:inputType="text"
-                        android:overlapAnchor="false" />
+                        android:overlapAnchor="false"
+                        tools:ignore="SpeakableTextPresentCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
@@ -234,11 +236,13 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/text_input_layout_outlined_rh"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="181dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
                     android:background="@drawable/borde"
                     app:boxBackgroundColor="#95E0E3"
+                    app:layout_constraintEnd_toStartOf="@+id/text_input_layout_outlined_signo"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/error_gender">
 
@@ -251,7 +255,8 @@
                         android:layout_marginEnd="2dp"
                         android:layout_marginBottom="10dp"
                         android:inputType="text"
-                        android:overlapAnchor="false" />
+                        android:overlapAnchor="false"
+                        tools:ignore="SpeakableTextPresentCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
@@ -270,11 +275,10 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="90dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="5dp"
                     android:background="@drawable/borde"
                     app:boxBackgroundColor="#95E0E3"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/text_input_layout_outlined_rh"
                     app:layout_constraintTop_toBottomOf="@+id/error_gender">
 
                     <Spinner
@@ -286,7 +290,8 @@
                         android:layout_marginEnd="2dp"
                         android:layout_marginBottom="10dp"
                         android:inputType="text"
-                        android:overlapAnchor="false" />
+                        android:overlapAnchor="false"
+                        tools:ignore="SpeakableTextPresentCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
@@ -301,16 +306,16 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/text_input_layout_outlined_fecha_nacimiento"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
                     android:hint="Fecha de nacimiento"
                     android:textSize="20dp"
                     app:boxBackgroundColor="#95E0E3"
                     app:boxBackgroundMode="outline"
                     app:hintTextColor="@color/black"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/calendarioImagen"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/error_rh">
 
@@ -322,6 +327,7 @@
                         android:layout_marginTop="2dp"
                         android:layout_marginEnd="2dp"
                         android:layout_marginBottom="2dp"
+                        android:focusable="false"
                         android:inputType="text"
                         android:maxLines="1"
                         android:textSize="20dp" />
@@ -342,7 +348,7 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginEnd="5dp"
                     android:hint="Contraseña"
                     android:textSize="20dp"
@@ -381,7 +387,7 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginEnd="5dp"
                     android:hint="Confirmar contraseña"
                     android:textSize="20dp"
@@ -428,6 +434,17 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/error_confirmation" />
+
+                <ImageView
+                    android:id="@+id/calendarioImagen"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_marginEnd="5dp"
+                    android:onClick="onClickCalendario"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/error_rh"
+                    app:srcCompat="@android:drawable/ic_menu_my_calendar"
+                    tools:ignore="SpeakableTextPresentCheck" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

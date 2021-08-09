@@ -25,27 +25,15 @@ class Login : AppCompatActivity() {
         title = "BOTÓN DE PÁNICO"
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
-
-// ...
-// Initialize Firebase Auth
         auth = Firebase.auth
-
-
-
     }
-
 
     fun iniciarSesion(v: View){
         //CONTROLAR QUE SI HAY ERROR, NO PASE A AUTENTIFICAR
         if (falloInisioDeSesion()){
             validacionFirebase()
-            //nuevaValidación()
-
         }
     }
-
-
 
     private fun validacionFirebase(){
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email,password.text.toString()).addOnCompleteListener {
@@ -62,10 +50,8 @@ class Login : AppCompatActivity() {
     }
 
     private fun credencialesInvalidas(){
-
             error_validacion.text = ("Credenciales invalidas")
             error_validacion.error = ""
-
     }
 
     private fun falloInisioDeSesion(): Boolean {
