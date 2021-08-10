@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -15,6 +17,7 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_login.error_password
 import kotlinx.android.synthetic.main.activity_login.password
+import kotlinx.android.synthetic.main.activity_registro.*
 
 class Login : AppCompatActivity() {
 
@@ -25,6 +28,7 @@ class Login : AppCompatActivity() {
         title = "BOTÓN DE PÁNICO"
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        inicializarSpinnerDocumento()
         auth = Firebase.auth
     }
 
@@ -56,15 +60,27 @@ class Login : AppCompatActivity() {
 
     private fun falloInisioDeSesion(): Boolean {
         var resultado = true
+        email=""
+        //validacion spinner documento
+        if (document_type_login.selectedItem == "Seleccione") {
+            error_document_type_login.text = ("Seleccione una opción ")
+            error_document_type_login.error = ""
+            resultado = false
+        } else {
+            error_document_type_login.text = null
+            error_document_type_login.error = null
+        }
+        // valicaion campo numero de documento
         if (user.text.toString().isEmpty()) {
-            error_user.text = ("El usuario es necesario")
+            error_user.text = ("El documento es necesario")
             error_user.error = ""
             resultado = false
         } else {
-            email=user.text.toString()+"@gmail.com"
+            email=document_type_login.selectedItem.toString()+user.text.toString()+"@gmail.com"
             error_user.text = null
             error_user.error = null
         }
+        //valicion campo contraseña
         if (password.text.toString().isEmpty()) {
             error_password.text = ("La contraseña es necesaria")
             error_password.error = ""
@@ -74,6 +90,15 @@ class Login : AppCompatActivity() {
             error_password.error = null
         }
         return resultado
+    }
+
+    private fun inicializarSpinnerDocumento() {
+        val spinnerDocumento = findViewById<Spinner>(R.id.document_type_login)
+        val listaDocumento = resources.getStringArray(R.array.tipos_documento)
+        val adaptadorDocumento =
+            ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, listaDocumento)
+
+        spinnerDocumento.adapter = adaptadorDocumento
     }
 
     fun onClickInicarSesionSinCredenciales(v: View) {

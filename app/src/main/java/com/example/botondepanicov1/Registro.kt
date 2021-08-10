@@ -112,7 +112,7 @@ class Registro : AppCompatActivity() {
 
     private fun falloRegistro(): Boolean {
         var resultado = true
-
+        email=""
         // Validcion campo password nonull
         if (password.text.toString().isEmpty()) {
             error_password.text = ("Ingrese la contraseña ")
@@ -154,7 +154,7 @@ class Registro : AppCompatActivity() {
             error_document_number.error = ""
             resultado = false
         } else {
-            email = document_number.text.toString() + "@gmail.com"
+            email = document_type.selectedItem.toString()+document_number.text.toString() + "@gmail.com"
             error_document_number.text = null
             error_document_number.error = null
         }

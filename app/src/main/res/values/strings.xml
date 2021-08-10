@@ -3,7 +3,6 @@
     <string name="title_name">BOTÓN DE PÁNICO</string>
     <string-array name="tipos_documento">
         <item>Seleccione</item>
-        <item>TI</item>
         <item>CC</item>
     </string-array>
     <string-array name="genero">
