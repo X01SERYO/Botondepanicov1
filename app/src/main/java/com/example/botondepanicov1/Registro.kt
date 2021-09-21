@@ -3,26 +3,21 @@ package com.example.botondepanicov1
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
-import android.content.ClipData
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils
+import android.preference.PreferenceManager
 import android.util.Log
 
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
 import com.google.firebase.auth.*
 
 import kotlinx.android.synthetic.main.activity_registro.*
 import java.util.*
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_registro.error_password
 import kotlinx.android.synthetic.main.activity_registro.password
 
@@ -33,6 +28,7 @@ class Registro : AppCompatActivity() {
     private lateinit var database: FirebaseDatabase
     private lateinit var auth : FirebaseAuth
     private lateinit var email : String
+    private var key : String = "MY_KEY"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         title = "REGISTRO"
@@ -70,29 +66,35 @@ class Registro : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("CommitPrefEdits")
     private fun crearNuevaCuenta(){
-        val tipoDocumento = document_type.selectedItem.toString()
-        val documento = document_number.text.toString()
-        val nombre = first_name.text.toString()
-        val apellido = last_name.text.toString()
-        val genero = gender.selectedItem.toString()
-        val rh = rh.selectedItem.toString() + signo.selectedItem.toString()
-        val fecha = fecha_nacimiento.text.toString()
-        val contraseña = password.text.toString()
-            auth.createUserWithEmailAndPassword(email,contraseña).addOnCompleteListener(this){
+        val persona = Persona()
+        persona.setTipoDocumento(document_type.selectedItem.toString())
+        persona.setNumeroDocumento(document_number.text.toString())
+        persona.setNombres(first_name.text.toString())
+        persona.setApellidos(last_name.text.toString())
+        persona.setGenero(gender.selectedItem.toString())
+        persona.setRh(rh.selectedItem.toString() + signo.selectedItem.toString())
+        persona.setFechaNacimiento(fecha_nacimiento.text.toString())
+        persona.setContrasenia(password.text.toString())
+            auth.createUserWithEmailAndPassword(email,persona.getContrasenia()).addOnCompleteListener(this){
                     task ->
                 if(task.isComplete){
-                    val userBD= dbReference.child(documento)
-                    userBD.child("tipo_documento").setValue(tipoDocumento)
-                    userBD.child("documento").setValue(documento)
-                    userBD.child("nombre").setValue(nombre)
-                    userBD.child("apellido").setValue(apellido)
-                    userBD.child("genero").setValue(genero)
-                    userBD.child("rh").setValue(rh)
-                    userBD.child("fecha_nacimiento").setValue(fecha)
-                    userBD.child("contraseña").setValue(contraseña)
+                    val userBD= dbReference.child(persona.getNumeroDocumento())
+                    userBD.child("tipo_documento").setValue(persona.getTipoDocumento())
+                    userBD.child("documento").setValue(persona.getNumeroDocumento())
+                    userBD.child("nombre").setValue(persona.getNombres())
+                    userBD.child("apellido").setValue(persona.getApellidos())
+                    userBD.child("genero").setValue(persona.getGenero())
+                    userBD.child("rh").setValue(persona.getRh())
+                    userBD.child("fecha_nacimiento").setValue(persona.getFechaNacimiento())
+                    userBD.child("contraseña").setValue(persona.getContrasenia())
                 }
             }
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val editor = prefs.edit()
+        editor.putString(key,persona.concatenado())
+        editor.apply()
     }
 
 
