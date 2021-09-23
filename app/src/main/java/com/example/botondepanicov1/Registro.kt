@@ -129,16 +129,28 @@ class Registro : AppCompatActivity() {
             password_confirmation.text.toString().isEmpty() -> {
                 error_confirmation.text = ("Ingrese la contraseña ")
                 error_confirmation.error = ""
+                resultado = false
             }
             password_confirmation.text.toString() != password.text.toString() -> {
                 error_password.text = ("Las contraseñas deben de ser iguales ")
                 error_password.error = ""
                 error_confirmation.text = ("Las contraseñas deben de ser iguales ")
                 error_confirmation.error = ""
+                resultado = false
             }
             else -> {
                 error_confirmation.text = null
                 error_confirmation.error = null
+                if (password.text.toString().length <6){
+                    error_password.text = ("La contraseña debe contener más de 6 caracteres ")
+                    error_password.error = ""
+                    resultado = false
+                }
+                if (password_confirmation.text.toString().length <6){
+                    error_confirmation.text = ("La contraseña debe contener más de 6 caracteres ")
+                    error_confirmation.error = ""
+                    resultado = false
+                }
             }
         }
         //validacion spinner documento
