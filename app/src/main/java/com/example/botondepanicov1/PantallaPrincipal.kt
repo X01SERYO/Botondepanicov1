@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import com.example.botondepanicov1.wifi_direct.BuscandoDispositivosWifi
 
 class PantallaPrincipal : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -12,7 +13,7 @@ class PantallaPrincipal : AppCompatActivity() {
     }
 
     fun onClickSolicitarAyuda(v:View){
-        val intent = Intent(this,SolicitandoAyuda::class.java)
+        val intent = Intent(this, BuscandoDispositivosWifi::class.java)
         startActivity(intent)
     }
 

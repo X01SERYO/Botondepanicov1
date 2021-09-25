@@ -28,7 +28,6 @@ class Registro : AppCompatActivity() {
     private lateinit var database: FirebaseDatabase
     private lateinit var auth : FirebaseAuth
     private lateinit var email : String
-    private var key : String = "MY_KEY"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         title = "REGISTRO"
@@ -91,10 +90,6 @@ class Registro : AppCompatActivity() {
                     userBD.child("contraseña").setValue(persona.getContrasenia())
                 }
             }
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val editor = prefs.edit()
-        editor.putString(key,persona.concatenado())
-        editor.apply()
     }
 
 
