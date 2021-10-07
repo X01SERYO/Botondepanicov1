@@ -3,14 +3,12 @@ package com.example.botondepanicov1
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
-import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
 
 import android.view.View
 import android.widget.*
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.*
 
@@ -18,13 +16,14 @@ import kotlinx.android.synthetic.main.activity_registro.*
 import java.util.*
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_registro.error_password
 import kotlinx.android.synthetic.main.activity_registro.password
 
 
 class Registro : AppCompatActivity() {
 
-    private lateinit var dbReference: DatabaseReference
+    private lateinit var dbReferenciaUser: DatabaseReference
     private lateinit var database: FirebaseDatabase
     private lateinit var auth : FirebaseAuth
     private lateinit var email : String
@@ -41,7 +40,7 @@ class Registro : AppCompatActivity() {
         database= FirebaseDatabase.getInstance()
         auth = FirebaseAuth.getInstance()
 
-        dbReference=database.reference.child("User")
+        dbReferenciaUser=database.reference.child("User")
     }
 
     @SuppressLint("SetTextI18n")
@@ -53,7 +52,7 @@ class Registro : AppCompatActivity() {
         val date = DatePickerDialog( this,
             { view, year, month, dayOfMonth ->
                 fecha_nacimiento.setText("$dayOfMonth / ${month + 1} / $year")
-                Log.v("Sergio","2 $dia $mes $anio")
+                Log.v("Sergio","$dia $mes $anio")
             },anio,mes,dia)
         date.show()
     }
@@ -76,10 +75,13 @@ class Registro : AppCompatActivity() {
         persona.setRh(rh.selectedItem.toString() + signo.selectedItem.toString())
         persona.setFechaNacimiento(fecha_nacimiento.text.toString())
         persona.setContrasenia(password.text.toString())
+
+        val user = email.replace("@gmail.com","")
+        Log.v("Sergio", user)
             auth.createUserWithEmailAndPassword(email,persona.getContrasenia()).addOnCompleteListener(this){
                     task ->
                 if(task.isComplete){
-                    val userBD= dbReference.child(persona.getNumeroDocumento())
+                    val userBD= dbReferenciaUser.child(user)
                     userBD.child("tipo_documento").setValue(persona.getTipoDocumento())
                     userBD.child("documento").setValue(persona.getNumeroDocumento())
                     userBD.child("nombre").setValue(persona.getNombres())
@@ -99,10 +101,10 @@ class Registro : AppCompatActivity() {
             .addOnCompleteListener {
                 if (it.isSuccessful) {
                     crearNuevaCuenta()
-                   val intent = Intent(this, Login::class.java)
-                    startActivity(intent)
+                    finish()
                 } else {
-                    showAlet1()
+                    val alerta = PopUpAlerta()
+                    alerta.mostrarAlertaRegistro(this)
                 }
             }
     }
@@ -203,6 +205,15 @@ class Registro : AppCompatActivity() {
             error_rh.text = null
             error_rh.error = null
         }
+        //validacion spinner rh
+        if (signo.selectedItem == "") {
+            error_rh.text = ("Seleccione una opción ")
+            error_rh.error = ""
+            resultado = false
+        } else {
+            error_rh.text = null
+            error_rh.error = null
+        }
         //Validacion del campo fecha nacimiento
         if (fecha_nacimiento.text.toString().isEmpty()) {
             error_fecha_nacimiento.text = ("Ingrese su fecha de nacimiento ")
@@ -216,22 +227,7 @@ class Registro : AppCompatActivity() {
         return resultado
     }
 
-    private fun showAlet1() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Error")
-        builder.setMessage("Datos erroneos o ya se ha verificado una cuenta con este documento")
-        builder.setPositiveButton("Aceptar", null)
-        val dialogo: AlertDialog = builder.create()
-        dialogo.show()
-    }
-    private fun showAlet2() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Error")
-        builder.setMessage("Datos erroneos o ya se ha verificado una cuenta con ta cedula")
-        builder.setPositiveButton("Aceptar", null)
-        val dialogo: AlertDialog = builder.create()
-        dialogo.show()
-    }
+
 
     private fun inicializarSpinnerSigno() {
         val spinnerSigno = findViewById<Spinner>(R.id.signo)

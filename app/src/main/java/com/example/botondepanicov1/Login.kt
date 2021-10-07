@@ -1,5 +1,6 @@
 package com.example.botondepanicov1
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,15 +11,11 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_login.error_password
 import kotlinx.android.synthetic.main.activity_login.password
-import kotlinx.android.synthetic.main.activity_registro.*
 
 class Login : AppCompatActivity() {
 
@@ -31,6 +28,10 @@ class Login : AppCompatActivity() {
         title = "BOTÓN DE PÁNICO"
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        val validacionPermisos = ValidacionPermisos()
+        validacionPermisos.validacionUbicacion(this)
+
         iniciarSesionAutomatico()
         inicializarSpinnerDocumento()
         auth = Firebase.auth
@@ -38,7 +39,7 @@ class Login : AppCompatActivity() {
 
     private fun capturarDatosPersona() {
         val mDatabase = FirebaseDatabase.getInstance().reference
-        val documento = user.text.toString()
+        val documento = email.replace("@gmail.com","")
         val persona = Persona()
         mDatabase.child("User").child(documento).get().addOnSuccessListener {
             persona.setTipoDocumento(it.child("tipo_documento").value.toString())
@@ -68,6 +69,7 @@ class Login : AppCompatActivity() {
         val datos = pref.getString(keyLogin, "No hay datos").toString()
         Log.v("Sergio", datos)
         if (datos != "No hay datos") {
+            finish()
             val intent = Intent(this, PantallaPrincipal::class.java)
             startActivity(intent)
         }
@@ -87,6 +89,7 @@ class Login : AppCompatActivity() {
                 if (it.isSuccessful) {
                     capturarDatosPersona()
                     capturarCredenciales(email, password.text.toString())
+                    finish()
                     val intent = Intent(this, PantallaPrincipal::class.java)
                     startActivity(intent)
                 } else {

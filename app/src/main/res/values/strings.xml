@@ -4,6 +4,8 @@
     <string-array name="tipos_documento">
         <item>Seleccione</item>
         <item>CC</item>
+        <item>TI</item>
+        <item>CE</item>
     </string-array>
     <string-array name="genero">
         <item>Seleccione</item>
@@ -19,6 +21,7 @@
         <item>AB</item>
     </string-array>
     <string-array name="signo">
+        <item></item>
         <item>+</item>
         <item>-</item>
     </string-array>

@@ -95,7 +95,9 @@
             app:boxBackgroundColor="#95E0E3"
             app:boxBackgroundMode="outline"
             app:hintTextColor="@color/black"
-            app:layout_constraintBottom_toTopOf="@+id/error_user">
+            app:layout_constraintBottom_toTopOf="@+id/error_user"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/user"
