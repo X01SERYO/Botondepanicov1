@@ -2,9 +2,10 @@ package com.example.botondepanicov1
 
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.util.Log
 
 import android.view.View
@@ -16,17 +17,17 @@ import kotlinx.android.synthetic.main.activity_registro.*
 import java.util.*
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_registro.error_password
 import kotlinx.android.synthetic.main.activity_registro.password
+import java.text.SimpleDateFormat
 
 
 class Registro : AppCompatActivity() {
 
     private lateinit var dbReferenciaUser: DatabaseReference
     private lateinit var database: FirebaseDatabase
-    private lateinit var auth : FirebaseAuth
-    private lateinit var email : String
+    private lateinit var auth: FirebaseAuth
+    private lateinit var email: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         title = "REGISTRO"
@@ -37,23 +38,25 @@ class Registro : AppCompatActivity() {
         inicializarSpinnerRh()
         inicializarSpinnerSigno()
 
-        database= FirebaseDatabase.getInstance()
+        database = FirebaseDatabase.getInstance()
         auth = FirebaseAuth.getInstance()
 
-        dbReferenciaUser=database.reference.child("User")
+        dbReferenciaUser = database.reference.child("User")
     }
 
     @SuppressLint("SetTextI18n")
-    fun onClickCalendario(v:View){
+    fun onClickCalendario(v: View) {
         val c = Calendar.getInstance()
         val dia = c.get(Calendar.DAY_OF_MONTH)
         val mes = c.get(Calendar.MONTH)
         val anio = c.get(Calendar.YEAR)
-        val date = DatePickerDialog( this,
+        val date = DatePickerDialog(
+            this,
             { view, year, month, dayOfMonth ->
                 fecha_nacimiento.setText("$dayOfMonth / ${month + 1} / $year")
-                Log.v("Sergio","$dia $mes $anio")
-            },anio,mes,dia)
+                Log.v("Sergio", "$dia $mes $anio")
+            }, anio, mes, dia
+        )
         date.show()
     }
 
@@ -65,7 +68,7 @@ class Registro : AppCompatActivity() {
     }
 
     @SuppressLint("CommitPrefEdits")
-    private fun crearNuevaCuenta(){
+    private fun crearNuevaCuenta() {
         val persona = Persona()
         persona.setTipoDocumento(document_type.selectedItem.toString())
         persona.setNumeroDocumento(document_number.text.toString())
@@ -76,12 +79,12 @@ class Registro : AppCompatActivity() {
         persona.setFechaNacimiento(fecha_nacimiento.text.toString())
         persona.setContrasenia(password.text.toString())
 
-        val user = email.replace("@gmail.com","")
+        val user = email.replace("@gmail.com", "")
         Log.v("Sergio", user)
-            auth.createUserWithEmailAndPassword(email,persona.getContrasenia()).addOnCompleteListener(this){
-                    task ->
-                if(task.isComplete){
-                    val userBD= dbReferenciaUser.child(user)
+        auth.createUserWithEmailAndPassword(email, persona.getContrasenia())
+            .addOnCompleteListener(this) { task ->
+                if (task.isComplete) {
+                    val userBD = dbReferenciaUser.child(user)
                     userBD.child("tipo_documento").setValue(persona.getTipoDocumento())
                     userBD.child("documento").setValue(persona.getNumeroDocumento())
                     userBD.child("nombre").setValue(persona.getNombres())
@@ -101,17 +104,18 @@ class Registro : AppCompatActivity() {
             .addOnCompleteListener {
                 if (it.isSuccessful) {
                     crearNuevaCuenta()
-                    finish()
+                    val alerta = PopUpAlerta()
+                    alerta.mostrarExitoRegistro(this)
                 } else {
                     val alerta = PopUpAlerta()
-                    alerta.mostrarAlertaRegistro(this)
+                    alerta.mostrarErrorRegistro(this)
                 }
             }
     }
 
     private fun falloRegistro(): Boolean {
         var resultado = true
-        email=""
+        email = ""
         // Validcion campo password nonull
         if (password.text.toString().isEmpty()) {
             error_password.text = ("Ingrese la contraseña ")
@@ -138,13 +142,14 @@ class Registro : AppCompatActivity() {
             else -> {
                 error_confirmation.text = null
                 error_confirmation.error = null
-                if (password.text.toString().length <6){
-                    error_password.text = ("La contraseña debe contener más de 6 caracteres ")
+                if (password.text.toString().length < 6) {
+                    error_password.text = ("La contraseña debe contener al menos 6 caracteres ")
                     error_password.error = ""
                     resultado = false
                 }
-                if (password_confirmation.text.toString().length <6){
-                    error_confirmation.text = ("La contraseña debe contener más de 6 caracteres ")
+                if (password_confirmation.text.toString().length < 6) {
+                    error_confirmation.text =
+                        ("La contraseña debe contener al menos  6 caracteres ")
                     error_confirmation.error = ""
                     resultado = false
                 }
@@ -165,7 +170,8 @@ class Registro : AppCompatActivity() {
             error_document_number.error = ""
             resultado = false
         } else {
-            email = document_type.selectedItem.toString()+document_number.text.toString() + "@gmail.com"
+            email =
+                document_type.selectedItem.toString() + document_number.text.toString() + "@gmail.com"
             error_document_number.text = null
             error_document_number.error = null
         }
@@ -220,14 +226,38 @@ class Registro : AppCompatActivity() {
             error_fecha_nacimiento.error = ""
             resultado = false
         } else {
-            error_fecha_nacimiento.text = null
-            error_fecha_nacimiento.error = null
+            val edad = 10
+            if (validacionEdad(fecha_nacimiento.text.toString()) < edad) {
+                error_fecha_nacimiento.text = ("Minimo debes tener $edad años ")
+                error_fecha_nacimiento.error = ""
+                resultado = false
+            } else {
+                error_fecha_nacimiento.text = null
+                error_fecha_nacimiento.error = null
+            }
         }
 
         return resultado
     }
 
+    @SuppressLint("SimpleDateFormat")
+    private fun validacionEdad(fechaNacimiento: String): Int {
+        val c = Calendar.getInstance()
+        val diaActual = c.get(Calendar.DAY_OF_MONTH)
+        var mesActual = c.get(Calendar.MONTH)
+        mesActual += 1
+        val anioActual = c.get(Calendar.YEAR)
 
+        val formatoActual = SimpleDateFormat("dd/MM/yyyy")
+        val formatoNacimiento = SimpleDateFormat("dd / MM / yyyy")
+        val fechaActual: Date = formatoActual.parse("$diaActual/$mesActual/$anioActual")
+        val fechaNacimiento: Date = formatoNacimiento.parse(fechaNacimiento)
+        val anios: Int = fechaActual.year - fechaNacimiento.year
+
+        Log.d("Sergio", "$anios:")
+
+        return anios
+    }
 
     private fun inicializarSpinnerSigno() {
         val spinnerSigno = findViewById<Spinner>(R.id.signo)
