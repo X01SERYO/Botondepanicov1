@@ -2,14 +2,13 @@ package com.example.botondepanicov1
 
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.DatePickerDialog
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.*
 
@@ -54,7 +53,6 @@ class Registro : AppCompatActivity() {
             this,
             { view, year, month, dayOfMonth ->
                 fecha_nacimiento.setText("$dayOfMonth / ${month + 1} / $year")
-                Log.v("Sergio", "$dia $mes $anio")
             }, anio, mes, dia
         )
         date.show()
@@ -104,13 +102,35 @@ class Registro : AppCompatActivity() {
             .addOnCompleteListener {
                 if (it.isSuccessful) {
                     crearNuevaCuenta()
-                    val alerta = PopUpAlerta()
-                    alerta.mostrarExitoRegistro(this)
+                    mostrarExitoRegistro()
+
                 } else {
-                    val alerta = PopUpAlerta()
-                    alerta.mostrarErrorRegistro(this)
+                    mostrarErrorRegistro()
                 }
             }
+    }
+
+    private fun mostrarExitoRegistro() {
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Registro Exitoso")
+            .setMessage("Gracias por confiar en nosotros")
+            .setPositiveButton("Aceptar") { _, _ ->
+                finish()
+            }
+            .create()
+        dialog.show()
+    }
+
+    private fun mostrarErrorRegistro() {
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Error")
+            .setMessage("Ya se ha registrado anteriormente con este documento")
+            .setPositiveButton("Aceptar") { _, _ ->
+                finish()
+            }
+            .create()
+
+        dialog.show()
     }
 
     private fun falloRegistro(): Boolean {
@@ -252,11 +272,8 @@ class Registro : AppCompatActivity() {
         val formatoNacimiento = SimpleDateFormat("dd / MM / yyyy")
         val fechaActual: Date = formatoActual.parse("$diaActual/$mesActual/$anioActual")
         val fechaNacimiento: Date = formatoNacimiento.parse(fechaNacimiento)
-        val anios: Int = fechaActual.year - fechaNacimiento.year
 
-        Log.d("Sergio", "$anios:")
-
-        return anios
+        return fechaActual.year - fechaNacimiento.year
     }
 
     private fun inicializarSpinnerSigno() {

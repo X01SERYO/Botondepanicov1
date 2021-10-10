@@ -35,6 +35,7 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 
 class BuscandoDispositivosWifi : AppCompatActivity(){
 
@@ -42,7 +43,6 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
     private var wifiP2pChannel: WifiP2pManager.Channel? = null
     var longitude = 0.0
     var latitude = 0.0
-    var indice = 0.0
     private var ingredients: ArrayList<Ingredient>? = null
     private var record: MutableMap<*, *>? = null
     private var lv: ListView? = null
@@ -61,51 +61,24 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
     lateinit var otherDevice6: LinearLayout
     lateinit var otherDevice9: LinearLayout
 
+    // Llave de las preferencias
     private var key: String = "MY_KEY"
 
     private var mProgressDialog: ProgressDialog? = null
     var wifiManager: WifiManager? = null
 
-    //MODULO SERVICE
-    private val TAG = "MainActivity"
-    //private val intent = Intent
-    private val token = "MainActivity"
-    private val button: Button? = null
-    private var datei: Date? = null
-
-    //Variables Calculo Reference ideal Acelerometer and Proximity
-    private val RANGE_AP_A = 0
-    private val RANGE_AP_B = 720
-    private val REFERENCE_IDEAL_AP_C = 0
-    private val REFERENCE_IDEAL_AP_D = 10
-
-    //Variables calculo Reference ideal Battery
-    private val RANGE_BATTERY_A = 0
-    private val RANGE_BATTERY_B = 100
-    private val REFERENCE_IDEAL_BATTERY_C = 100
-    private val REFERENCE_IDEAL_BATTERY_D = 100
-
-    //Variables criteria values
-    private val CRITERIA_ACELEROMETER_VALUE = 0.5
-    private val CRITERIA_PROXIMITY_VALUE = 0.17
-    private val CRITERIA_BATTERY_VALUE = 0.33
-    private var weightNormalized: List<Double> = ArrayList()
-
     //Estado de la bateria
     private var bm: BatteryManager? = null
-    private var percentageBattery = 0
 
     //Obtain data Sharedpreference
     val PREFERENCES_DATE = "saveDate"
-    val ACELEROMETER_ITERATION_DATE = "acelerometerIterationKey"
-    val PROXIMITY_ITERATION_DATE = "proximityIterationKey"
     private var sharedpreferences: SharedPreferences? = null
-    private val sharedPreferencesRelativeIndex: SharedPreferences? = null
-    private val editorRelativeIndex: SharedPreferences.Editor? = null
 
-    //Nombre extern file
-    private val filenameIndexRelative = "IndexRelativeFile"
-    private var global_level = 0
+    //Inicialización nivel bateria
+    private var globalLevel = 0
+
+    //Terminar activiadd
+    private var terminarActividad = 0
 
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -119,13 +92,19 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
         val batteryStatus = this.registerReceiver(null, ifilter)
         val level = batteryStatus!!.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
         val scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
-        global_level = (level * 100 / scale.toFloat()).toInt()
+        globalLevel = (level * 100 / scale.toFloat()).toInt()
 
         inicio()
         iniciarCuenta()
-        Log.d("sergio", "fin")
+        Log.d("Sergio", "fin")
 
 
+    }
+
+    override fun onBackPressed() {
+        terminarActividad = 1
+        Log.d("Sergio", "terminarActividad = $terminarActividad")
+        finish()
     }
 
     private fun inicio(){
@@ -166,9 +145,9 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
             }
         })
         setMap()
-        val handler = Handler()
-        val codificator = Codificator()
 
+        val codificator = Codificator()
+        val handler = Handler()
 
         handler.postDelayed(Runnable {
             val pref = PreferenceManager.getDefaultSharedPreferences(this)
@@ -232,21 +211,20 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
                 ingredient.setDate(map["date"])
                 if (!isObjectInArray(wifiP2pDevice.deviceAddress)) {
                     ingredients!!.add(ingredient)
-                    val arrayList: ArrayList<Ingredient>?
-                    arrayList = ListSort(ingredients)
+                    val arrayList: ArrayList<Ingredient>? = listSort(ingredients)
                     adapter!!.clear()
                     for (i in arrayList!!.indices) {
                         adapter!!.add(arrayList[i])
                     }
-                    lv!!.setSelection(adapter!!.getCount() - 1)
-                    Log.d("Add device", java.lang.String.valueOf(adapter!!.getCount()))
+                    lv!!.setSelection(adapter!!.count - 1)
+                    Log.d("Add device", java.lang.String.valueOf(adapter!!.count))
                     Log.d("Add device", ingredient.name.toString() + " device")
                     when (ingredients!!.size) {
                         1 -> {
-                            otherDevice!!.visibility = View.VISIBLE
-                            otherDevice!!.y =
+                            otherDevice.visibility = View.VISIBLE
+                            otherDevice.y =
                                 calculateY(java.lang.Double.valueOf(map["latitude"]))
-                            otherDevice!!.x =
+                            otherDevice.x =
                                 calculateX(java.lang.Double.valueOf(map["longitude"]))
                         }
                         2 -> {
@@ -402,204 +380,8 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
         override fun onProviderDisabled(s: String) {}
     }
 
-    fun calcularIndicedeActividad(): Double {
-        datei = Date()
-        Log.v("TIME", percentageBattery.toString())
-        val dateFinallyIteration = datei!!.time
-        val timei = dateToCalendar(datei!!)
-        val dateIterationAcelerometer = sharedpreferences!!.getLong(ACELEROMETER_ITERATION_DATE, 0)
-        val timeAce = longToCalendar(dateIterationAcelerometer)
-        val dateIterationProximity = sharedpreferences!!.getLong(PROXIMITY_ITERATION_DATE, 0)
-        val timePro = longToCalendar(dateIterationProximity)
-        val timec1 = CalculateTiempoTranscurrido(dateFinallyIteration, dateIterationAcelerometer)
-        val timec2 = CalculateTiempoTranscurrido(dateFinallyIteration, dateIterationProximity)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            percentageBattery = bm!!.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
-        }
-        val idealReferenceAcelerometro = CalculateReferenceIdeal(
-            timec1,
-            RANGE_AP_A,
-            RANGE_AP_B,
-            REFERENCE_IDEAL_AP_C,
-            REFERENCE_IDEAL_AP_D
-        )
-        val idealReferenceProximidad = CalculateReferenceIdeal(
-            timec2,
-            RANGE_AP_A,
-            RANGE_AP_B,
-            REFERENCE_IDEAL_AP_C,
-            REFERENCE_IDEAL_AP_D
-        )
-        val idealReferenceBattery = CalculateReferenceIdeal(
-            percentageBattery,
-            RANGE_BATTERY_A,
-            RANGE_BATTERY_B,
-            REFERENCE_IDEAL_BATTERY_C,
-            REFERENCE_IDEAL_BATTERY_D
-        )
-        weightNormalized = CalculateWeightNormalized(
-            idealReferenceAcelerometro,
-            idealReferenceProximidad,
-            idealReferenceBattery
-        )
-        val resultIndex = CalculateIndixe(weightNormalized)
-        Toast.makeText(applicationContext, "El indice es: $resultIndex", Toast.LENGTH_SHORT).show()
-        writeFileRelativeIndex(
-            timei,
-            timeAce,
-            timePro,
-            timec1.toString(),
-            timec2.toString(),
-            percentageBattery.toString(),
-            idealReferenceAcelerometro.toString(),
-            idealReferenceProximidad.toString(),
-            idealReferenceBattery.toString(),
-            weightNormalized.toString(),
-            resultIndex.toString()
-        )
-        return resultIndex
-    }
-
-    private fun dateToCalendar(date: Date): String? {
-        val cal = Calendar.getInstance()
-        cal.add(Calendar.DATE, 1)
-        val dateTest = cal.time
-        val format1 = SimpleDateFormat("HH:mm:ss")
-        var inActiveDate: String? = null
-        inActiveDate = format1.format(dateTest)
-        Log.v(TAG, inActiveDate)
-        return inActiveDate
-    }
-
-    private fun longToCalendar(millis: Long): String {
-        val calendar = Calendar.getInstance()
-        calendar.timeInMillis = millis
-        val mHour = calendar[Calendar.HOUR]
-        val mMinutes = calendar[Calendar.MINUTE]
-        val mSecond = calendar[Calendar.SECOND]
-        val time = "$mHour:$mMinutes:$mSecond"
-        Log.v(TAG, time)
-        return time
-    }
-
-    fun CalculateTiempoTranscurrido(dateiteration: Long, dateActual: Long): Int {
-        var functionResult = 0
-        val differenceDate = Math.abs(dateActual - dateiteration)
-        val minutesResult = TimeUnit.MILLISECONDS.toMinutes(differenceDate).toInt()
-        if (dateiteration == 0L || minutesResult > 720) {
-            functionResult = 720
-        } else if (dateiteration != 0L) {
-            functionResult = minutesResult
-        }
-        return functionResult
-    }
-
-    fun CalculateReferenceIdeal(t: Int, a: Int, b: Int, c: Int, d: Int): Double {
-        var resultIdealReference = 0.0
-        if (t >= c && t <= d) {
-            resultIdealReference = 1.0
-        } else if (t >= a && t <= c && a != c) {
-            resultIdealReference = 1.toDouble() - Math.min(Math.abs(t - c), Math.abs(t - d))
-                .toDouble() / Math.abs(a - c)
-            //resultIdealReference= 1-(Math.min(Math.abs(t - c), Math.abs(t - d))/Math.abs(a - c));
-        } else if (t >= d && t <= b && d != b) {
-            resultIdealReference = 1.toDouble() - Math.min(Math.abs(t - c), Math.abs(t - d))
-                .toDouble() / Math.abs(d - b)
-            //resultIdealReference= 1-(Math.min(Math.abs(t - c), Math.abs(t - d))/Math.abs(d - b));
-        }
-        return resultIdealReference
-    }
-
-    fun CalculateWeightNormalized(
-        idealReferenceAcelerometer: Double,
-        idealReferenceProximity: Double,
-        idealReferenceBattery: Double
-    ): List<Double> {
-        val listNormalized: MutableList<Double> = ArrayList()
-        val weigthAcelerometer = idealReferenceAcelerometer * CRITERIA_ACELEROMETER_VALUE
-        val weigthProximity = idealReferenceProximity * CRITERIA_PROXIMITY_VALUE
-        val weigthBattery = idealReferenceBattery * CRITERIA_BATTERY_VALUE
-        listNormalized.add(weigthAcelerometer)
-        listNormalized.add(weigthProximity)
-        listNormalized.add(weigthBattery)
-        return listNormalized
-    }
-
-    fun CalculateIndixe(listNormalised: List<Double>): Double {
-        var firstIndex = 0.0
-        var secondIndex = 0.0
-        var relativeIndex = 0.0
-        val acelerometerValue = listNormalised[0]
-        val proximityValue = listNormalised[1]
-        val batteryValue = listNormalised[2]
-        firstIndex = Math.sqrt(
-            Math.pow(
-                acelerometerValue - CRITERIA_ACELEROMETER_VALUE,
-                2.0
-            ) + Math.pow(
-                proximityValue - CRITERIA_PROXIMITY_VALUE,
-                2.0
-            ) + Math.pow(batteryValue - CRITERIA_BATTERY_VALUE, 2.0)
-        )
-        secondIndex = Math.sqrt(
-            Math.pow(acelerometerValue, 2.0) + Math.pow(
-                proximityValue,
-                2.0
-            ) + Math.pow(
-                batteryValue,
-                2.0
-            )
-        )
-        relativeIndex = secondIndex / (firstIndex + secondIndex)
-        Toast.makeText(applicationContext, "indice relativo: $relativeIndex", Toast.LENGTH_SHORT)
-            .show()
-        return relativeIndex
-    }
-
-    fun writeFileRelativeIndex(
-        timei: String?,
-        timeAce: String,
-        timePro: String,
-        timec1: String,
-        timec2: String,
-        percentageBattery: String,
-        ira: String,
-        irp: String,
-        irb: String,
-        weightNormalized: String,
-        resultIndex: String
-    ) {
-        var bw: BufferedWriter? = null
-        var fw: FileWriter? = null
-        try {
-            val data =
-                "$timei,  $timeAce, $timePro, $timec1, $timec2, $percentageBattery, $ira, $irp, $irb, $weightNormalized, $resultIndex"
-            val file = File(getExternalFilesDir(null), filenameIndexRelative)
-            // Si el archivo no existe, se crea!
-            if (!file.exists()) {
-                file.createNewFile()
-            }
-            // flag true, indica adjuntar informaciÃ³n al archivo.
-            fw = FileWriter(file.absoluteFile, true)
-            bw = BufferedWriter(fw)
-            bw.newLine()
-            bw.write(data)
-        } catch (e: IOException) {
-            e.printStackTrace()
-        } finally {
-            try {
-                //Cierra instancias de FileWriter y BufferedWriter
-                bw?.close()
-                fw?.close()
-            } catch (ex: IOException) {
-                ex.printStackTrace()
-            }
-        }
-    }
-
-    private fun ListSort(lista: ArrayList<Ingredient>?): ArrayList<Ingredient>? {
-        val copy: ArrayList<Ingredient>?
-        copy = lista
+    private fun listSort(lista: ArrayList<Ingredient>?): ArrayList<Ingredient>? {
+        val copy: ArrayList<Ingredient>? = lista
         var name = ""
         var mac = ""
         var distance = 0.0
@@ -633,73 +415,68 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
     }
 
     private fun calculateX(otherLongitude: Double): Float {
-        val finalX: Double
-        finalX = (Math.abs(longitude) - Math.abs(otherLongitude)) * (10000 * distance * 5)
+        val finalX: Double = (abs(longitude) - abs(otherLongitude)) * (10000 * distance * 5)
         return finalX.toFloat()
     }
 
     private fun calculateY(otherLatitude: Double): Float {
-        val finalY: Double
-        finalY = (Math.abs(latitude) - Math.abs(otherLatitude)) * (10000 * distance * 5)
+        val finalY: Double = (abs(latitude) - abs(otherLatitude)) * (10000 * distance * 5)
         return finalY.toFloat()
     }
 
     private fun boton(){
-
         val intent = Intent(this, BuscandoDispositivosWifi::class.java)
         Log.d("tiempo", "este es el tiempo")
         Handler().postDelayed({ wifiManager!!.isWifiEnabled = false }, 30000)
         Log.d("tiempo", "este es el  otro tiempo")
         startActivity(intent)
         finish()
-
     }
 
     fun iniciarCuenta() {
         val tiempo: Long = bateria()
         Log.d("Sergio", "$tiempo inicio")
         //10000 equivale a diez segunodos de intervlo de descuento
-        val cuenta = object : CountDownTimer(tiempo, 10000) {
+        object : CountDownTimer(tiempo, 10000) {
             override fun onTick(millisUntilFinished: Long) {
-                val tiempo_f = millisUntilFinished / 1000
-                val minutos_f = (tiempo_f / 60).toInt()
-                val segundos_f = tiempo_f % 60
-                Log.d("Sergio", "$minutos_f:$segundos_f")
+                val tiempoF = millisUntilFinished / 1000
+                val minutosF = (tiempoF / 60).toInt()
+                val segundosF = tiempoF % 60
+                Log.d("Sergio", "$minutosF:$segundosF -- $terminarActividad")
             }
 
             override fun onFinish() {
-                boton()
-                //Log.d("Sergio", "BATERIA_count "+global_level);
-
-                //
+                if(terminarActividad == 0){
+                    boton()
+                }
             }
         }.start()
     }
 
-    fun bateria(): Long {
-        Log.d("Sergio", " batery$global_level")
+    private fun bateria(): Long {
+        Log.d("Sergio", " batery$globalLevel")
         var tiempo: Long = 20000
-        if (100 >= global_level && global_level > 80) {
+        if (globalLevel in 81..100) {
             Log.d("Sergio", " 100>=global_level | global_level>80")
             //40 segundos
             tiempo = (20 * 1000).toLong()
-        } else if (80 >= global_level && global_level > 60) {
+        } else if (globalLevel in 61..80) {
             Log.d("Sergio", " 80>=global_level && global_level>60")
             //20 segundos
             tiempo = (40 * 1000).toLong()
-        } else if (60 >= global_level && global_level > 40) {
+        } else if (globalLevel in 41..60) {
             Log.d("Sergio", " 60>=global_level && global_level>40")
             //1 minuto
             tiempo = (60 * 1000).toLong()
-        } else if (40 >= global_level && global_level > 20) {
+        } else if (globalLevel in 21..40) {
             Log.d("Sergio", " 40>=global_level && global_level>20")
             //1 minuto y 30 segundo
             tiempo = (60 * 1000 + 30 * 1000).toLong()
-        } else if (20 >= global_level && global_level > 10) {
+        } else if (globalLevel in 11..20) {
             Log.d("Sergio", " 20>=global_level && global_level>10")
             //2 minuto
             tiempo = (2 * 60 * 1000).toLong()
-        } else if (10 >= global_level && global_level > 0) {
+        } else if (globalLevel in 1..10) {
             Log.d("Sergio", " 10>=global_level && global_level>0")
             //2 minuto y 30 segundo
             tiempo = (2 * 60 * 1000 + 30 * 1000).toLong()
