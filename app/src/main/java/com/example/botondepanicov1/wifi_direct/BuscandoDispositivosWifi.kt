@@ -81,8 +81,10 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
     //Alarma
     private lateinit var playPausar : Button
     private lateinit var mp : MediaPlayer
-
     private val alarma = AlarmaSonora()
+
+    //Nombre Dispositivo
+    private lateinit var nombreDispositivo: String
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,6 +104,8 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         Log.d("Sergio","INCIO ACTIVIDAD " + prefs.getString(keyAlarma,"No hay datos").toString())
+
+        nombreDispositivo = Build.MANUFACTURER + " " + Build.MODEL
 
 
         alarma.estadoPreferencia(playPausar,mp,this)
@@ -166,7 +170,7 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
             (record as HashMap<Any?, Any?>)["longitude"] = longitude.toString()
             (record as HashMap<Any?, Any?>)["latitude"] = latitude.toString()
             (record as HashMap<Any?, Any?>)["date"] = codificator.dateToString(Date())//
-            (record as HashMap<Any?, Any?>)["indice"] = pref.getString(key,"No hay datos").toString()
+            (record as HashMap<Any?, Any?>)["indice"] = pref.getString(key,nombreDispositivo).toString()
             Log.d("MapDevices", "Record coordinates in the hashmap")
             serviceInfo = WifiP2pDnsSdServiceInfo.newInstance("_test", "_presence.tcp",
                 record as MutableMap<String, String>?
