@@ -437,10 +437,10 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
     }
 
     private fun boton(){
+        alarma.apagarTemporizador(playPausar,mp,this@BuscandoDispositivosWifi)
+
         val intent = Intent(this, BuscandoDispositivosWifi::class.java)
-        Log.d("tiempo", "este es el tiempo")
-        Handler().postDelayed({ wifiManager!!.isWifiEnabled = false }, 30000)
-        Log.d("tiempo", "este es el  otro tiempo")
+        wifiManager!!.isWifiEnabled = false
         finish()
         startActivity(intent)
     }
@@ -460,7 +460,6 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
             override fun onFinish() {
                 if(terminarActividad == 0){
                     boton()
-                    alarma.apagarTemporizador(playPausar,mp,this@BuscandoDispositivosWifi)
                 }
             }
         }.start()
