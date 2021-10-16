@@ -51,10 +51,9 @@ class Login : AppCompatActivity() {
             Log.v("Sergio", persona.concatenado())
             val prefs = PreferenceManager.getDefaultSharedPreferences(this)
             val editor = prefs.edit()
-            editor.putString(key,persona.concatenado())
+            editor.putString(key, persona.concatenado())
             editor.apply()
         }
-
     }
 
     fun capturarCredenciales(email: String, contrasenia: String) {

@@ -20,14 +20,15 @@
             android:id="@+id/button2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onClickRecibirAlertas"
-            android:text="Recibir alertas"
+            android:onClick="onClickCerrarSesion"
+            android:text="Cerrar sesión"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
+        android:background="@drawable/bordes_redondos"
         android:id="@+id/button"
         android:layout_width="349dp"
         android:layout_height="341dp"

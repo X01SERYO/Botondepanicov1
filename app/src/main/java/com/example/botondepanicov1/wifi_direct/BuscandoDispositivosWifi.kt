@@ -10,6 +10,7 @@ import android.database.DataSetObserver
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.media.MediaPlayer
 import android.net.wifi.WifiManager
 import android.net.wifi.p2p.WifiP2pManager
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo
@@ -27,14 +28,10 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.botondepanicov1.AlarmaSonora
 import com.example.botondepanicov1.R
-import java.io.BufferedWriter
-import java.io.File
-import java.io.FileWriter
-import java.io.IOException
-import java.text.SimpleDateFormat
+import kotlinx.android.synthetic.main.activity_buscando_dispositivos_wifi.*
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
 class BuscandoDispositivosWifi : AppCompatActivity(){
@@ -63,6 +60,7 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
 
     // Llave de las preferencias
     private var key: String = "MY_KEY"
+    private var keyAlarma: String = "ALARMA"
 
     private var mProgressDialog: ProgressDialog? = null
     var wifiManager: WifiManager? = null
@@ -80,6 +78,11 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
     //Terminar activiadd
     private var terminarActividad = 0
 
+    //Alarma
+    private lateinit var playPausar : Button
+    private lateinit var mp : MediaPlayer
+
+    private val alarma = AlarmaSonora()
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,6 +97,14 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
         val scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
         globalLevel = (level * 100 / scale.toFloat()).toInt()
 
+        playPausar = findViewById(R.id.alarma)
+        mp = MediaPlayer.create(this,R.raw.alarma_sonora)
+
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        Log.d("Sergio","INCIO ACTIVIDAD " + prefs.getString(keyAlarma,"No hay datos").toString())
+
+
+        alarma.estadoPreferencia(playPausar,mp,this)
         inicio()
         iniciarCuenta()
         Log.d("Sergio", "fin")
@@ -103,6 +114,7 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
 
     override fun onBackPressed() {
         terminarActividad = 1
+        alarma.apagarFinActividad(playPausar,mp,this)
         Log.d("Sergio", "terminarActividad = $terminarActividad")
         finish()
     }
@@ -429,12 +441,12 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
         Log.d("tiempo", "este es el tiempo")
         Handler().postDelayed({ wifiManager!!.isWifiEnabled = false }, 30000)
         Log.d("tiempo", "este es el  otro tiempo")
-        startActivity(intent)
         finish()
+        startActivity(intent)
     }
 
     fun iniciarCuenta() {
-        val tiempo: Long = bateria()
+        val tiempo: Long = calclarTiempo()
         Log.d("Sergio", "$tiempo inicio")
         //10000 equivale a diez segunodos de intervlo de descuento
         object : CountDownTimer(tiempo, 10000) {
@@ -448,9 +460,20 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
             override fun onFinish() {
                 if(terminarActividad == 0){
                     boton()
+                    alarma.apagarTemporizador(playPausar,mp,this@BuscandoDispositivosWifi)
                 }
             }
         }.start()
+    }
+
+    private fun calclarTiempo():Long{
+        val gauss = Random()
+        val numeroAleaorio = gauss.nextGaussian().toInt()
+        val desviacionStandar = 1
+        val media = 5
+        var numero = desviacionStandar * numeroAleaorio + media
+        numero *= 10000
+        return  numero.toLong()
     }
 
     private fun bateria(): Long {
@@ -482,5 +505,14 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
             tiempo = (2 * 60 * 1000 + 30 * 1000).toLong()
         }
         return tiempo
+    }
+
+    fun onClickAlarma(view : View){
+        alarma.reproducirParar(playPausar,mp,this)
+    }
+
+    fun onClickRefrescar(view: View){
+        terminarActividad = 1
+        boton()
     }
 }
