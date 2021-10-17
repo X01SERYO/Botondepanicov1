@@ -265,7 +265,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="5dp"
-                    android:text="RH"
+                    android:text="Tipo de sangre"
                     android:textColor="#454343"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/text_input_layout_outlined_rh" />
@@ -292,7 +292,19 @@
                         android:inputType="text"
                         android:overlapAnchor="false"
                         tools:ignore="SpeakableTextPresentCheck" />
+
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/title_rh2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="5dp"
+                    android:text="Factor"
+                    android:textColor="#454343"
+                    app:layout_constraintStart_toStartOf="@+id/text_input_layout_outlined_signo"
+                    app:layout_constraintTop_toTopOf="@+id/text_input_layout_outlined_signo" />
 
                 <TextView
                     android:id="@+id/error_rh"

@@ -322,7 +322,8 @@
             android:layout_marginStart="5dp"
             android:background="#166265"
             android:onClick="onClickAlarma"
-            android:text="Activar alarma sonora" />
+            android:text="Activar alarma" />
+
     </LinearLayout>
 
     <ListView

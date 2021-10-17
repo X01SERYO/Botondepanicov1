@@ -46,7 +46,9 @@ class Login : AppCompatActivity() {
             persona.setNumeroDocumento(it.child("documento").value.toString())
             persona.setNombres(it.child("nombre").value.toString())
             persona.setApellidos(it.child("apellido").value.toString())
+            persona.setGenero(it.child("genero").value.toString())
             persona.setRh(it.child("rh").value.toString())
+            persona.setFechaNacimiento(it.child("fecha_nacimiento").value.toString())
 
             Log.v("Sergio", persona.concatenado())
             val prefs = PreferenceManager.getDefaultSharedPreferences(this)

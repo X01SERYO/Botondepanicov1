@@ -12,7 +12,7 @@ class AlarmaSonora {
 
     fun apagarTemporizador(playPausar:Button, mp:MediaPlayer, context: BuscandoDispositivosWifi){
         mp.stop()
-        playPausar.text = ("ACTIVAR ALARMA SONORA")
+        playPausar.text = ("ACTIVAR ALARMA")
     }
 
     fun apagarFinActividad(playPausar:Button, mp:MediaPlayer, context: BuscandoDispositivosWifi){
@@ -20,7 +20,7 @@ class AlarmaSonora {
         val editor = prefs.edit()
 
         mp.stop()
-        playPausar.text = ("ACTIVAR ALARMA SONORA")
+        playPausar.text = ("ACTIVAR ALARMA")
         editor.putString(keyAlarma, "Inactiva")
         editor.apply()
     }
@@ -32,13 +32,13 @@ class AlarmaSonora {
         Log.d("Sergio","INCIO fun reproducirParar " + prefs.getString(keyAlarma,"No hay datos").toString())
         if (mp.isPlaying){
             mp.pause()
-            playPausar.text = ("ACTIVAR ALARMA SONORA")
+            playPausar.text = ("ACTIVAR ALARMA")
 
             editor.putString(keyAlarma, "Inactiva")
             editor.apply()
         }else{
             mp.start()
-            playPausar.text = ("DESACTIVAR ALARMA SONORA")
+            playPausar.text = ("DESACTIVAR ALARMA")
 
             editor.putString(keyAlarma, "Activa")
             editor.apply()

@@ -80,7 +80,7 @@ ArrayAdapter<Ingredient>(context, resource) {
         }
         distance.text = distanceString
         date.text = "Fecha de actualización:  " + ingredient.getDate()
-        indice.text = "Indice relativo:  " + ingredient.getIndice()
+        indice.text = "" + ingredient.getIndice()
         if (row != null) {
             when (position) {
                 0 -> imageView.background = row.resources.getDrawable(R.drawable.locationblue)

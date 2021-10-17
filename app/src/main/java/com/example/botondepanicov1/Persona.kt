@@ -92,7 +92,8 @@ class Persona {
     }
 
     fun concatenado(): String {
-        return tipoDocumento + ";" + numeroDocumento + ";" + nombres + ";" + apellidos + ";" +
-                genero + ";" + rh + ";" + fechaNacimiento + ";" + contrasenia
+        return "Tipo de documento: $tipoDocumento \nNúmero de documento: $numeroDocumento " +
+                "\nNombre: $nombres \nApellido: $apellidos \nGénero: $genero \nTipo de sangre: " +
+                "$rh \nFecha de nacimiento: $fechaNacimiento"
     }
 }
