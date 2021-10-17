@@ -105,7 +105,7 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         Log.d("Sergio","INCIO ACTIVIDAD " + prefs.getString(keyAlarma,"No hay datos").toString())
 
-        nombreDispositivo = "Dispositivo: " + Build.MANUFACTURER.toUpperCase() + " " + Build.MODEL
+        nombreDispositivo = "Dispositivo: ${Build.MANUFACTURER.toUpperCase(Locale.ROOT)} ${Build.MODEL}"
 
 
         alarma.estadoPreferencia(playPausar,mp,this)
@@ -228,7 +228,10 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
                 ingredient.setDate(map["date"])
                 if (!isObjectInArray(wifiP2pDevice.deviceAddress)) {
                     ingredients!!.add(ingredient)
-                    val arrayList: ArrayList<Ingredient>? = listSort(ingredients)
+                    Log.v("Sergio","$ingredients")
+
+                    val arrayList: ArrayList<Ingredient>? = ingredients
+
                     adapter!!.clear()
                     for (i in arrayList!!.indices) {
                         adapter!!.add(arrayList[i])
@@ -397,7 +400,7 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
         override fun onProviderDisabled(s: String) {}
     }
 
-    private fun listSort(lista: ArrayList<Ingredient>?): ArrayList<Ingredient>? {
+    /*private fun listSort(lista: ArrayList<Ingredient>?): ArrayList<Ingredient>? {
         val copy: ArrayList<Ingredient>? = lista
         var name = ""
         var mac = ""
@@ -429,7 +432,7 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
             copy[i].setDate(date)
         }
         return copy
-    }
+    }*/
 
     private fun calculateX(otherLongitude: Double): Float {
         val finalX: Double = (abs(longitude) - abs(otherLongitude)) * (10000 * distance * 5)

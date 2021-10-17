@@ -51,7 +51,7 @@ class AlarmaSonora {
         Log.d("Sergio","INCIO fun estadoPreferencia " + prefs.getString(keyAlarma,"No hay datos").toString())
         if (prefs.getString(keyAlarma,"No hay datos").toString() == "Activa"){
             mp.start()
-            playPausar.text = ("DESACTIVAR ALARMA SONORA")
+            playPausar.text = ("DESACTIVAR ALARMA")
         }
     }
 }
