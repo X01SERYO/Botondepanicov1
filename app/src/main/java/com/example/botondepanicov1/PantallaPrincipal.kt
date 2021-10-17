@@ -8,6 +8,7 @@ import com.example.botondepanicov1.wifi_direct.BuscandoDispositivosWifi
 import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import android.preference.PreferenceManager
+import android.util.Log
 
 
 class PantallaPrincipal : AppCompatActivity() {
@@ -38,17 +39,17 @@ class PantallaPrincipal : AppCompatActivity() {
     fun onClickCerrarSesion(v:View){
         finish()
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        var editor = prefs.edit()
-        editor.putString(key, "No hay datos")
-        editor.apply()
 
-        editor = prefs.edit()
-        editor.putString(keyLogin, "No hay datos")
-        editor.apply()
+        Log.v("Sergio","Pref a " + prefs.getString(key,"1").toString())
+        Log.v("Sergio","Pref a" + prefs.getString(keyLogin,"2").toString())
+        Log.v("Sergio","Pref a" + prefs.getString(keyAlarma,"3").toString())
 
-        editor = prefs.edit()
-        editor.putString(keyAlarma, "No hay datos")
-        editor.apply()
+        val editor = prefs.edit()
+        editor.clear().apply()
+
+        Log.v("Sergio","Pref d" + prefs.getString(key,"1").toString())
+        Log.v("Sergio","Pref d" + prefs.getString(keyLogin,"2").toString())
+        Log.v("Sergio","Pref d" + prefs.getString(keyAlarma,"3").toString())
 
         val intent = Intent(this,Login::class.java)
         startActivity(intent)

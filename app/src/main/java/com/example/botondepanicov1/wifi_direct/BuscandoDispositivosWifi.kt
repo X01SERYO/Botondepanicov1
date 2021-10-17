@@ -105,7 +105,7 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         Log.d("Sergio","INCIO ACTIVIDAD " + prefs.getString(keyAlarma,"No hay datos").toString())
 
-        nombreDispositivo = Build.MANUFACTURER + " " + Build.MODEL
+        nombreDispositivo = "Dispositivo: " + Build.MANUFACTURER.toUpperCase() + " " + Build.MODEL
 
 
         alarma.estadoPreferencia(playPausar,mp,this)
@@ -157,7 +157,7 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
         adapter?.registerDataSetObserver(object : DataSetObserver() {
             override fun onChanged() {
                 super.onChanged()
-                adapter?.getCount()?.minus(1)?.let { lv!!.setSelection(it) }
+                adapter?.count?.minus(1)?.let { lv!!.setSelection(it) }
             }
         })
         setMap()
@@ -167,10 +167,11 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
 
         handler.postDelayed(Runnable {
             val pref = PreferenceManager.getDefaultSharedPreferences(this)
+            Log.v("Sergio","Pref " + pref.getString(key, nombreDispositivo).toString())
             (record as HashMap<Any?, Any?>)["longitude"] = longitude.toString()
             (record as HashMap<Any?, Any?>)["latitude"] = latitude.toString()
             (record as HashMap<Any?, Any?>)["date"] = codificator.dateToString(Date())//
-            (record as HashMap<Any?, Any?>)["indice"] = pref.getString(key,nombreDispositivo).toString()
+            (record as HashMap<Any?, Any?>)["indice"] = pref.getString(key, nombreDispositivo).toString()
             Log.d("MapDevices", "Record coordinates in the hashmap")
             serviceInfo = WifiP2pDnsSdServiceInfo.newInstance("_test", "_presence.tcp",
                 record as MutableMap<String, String>?
