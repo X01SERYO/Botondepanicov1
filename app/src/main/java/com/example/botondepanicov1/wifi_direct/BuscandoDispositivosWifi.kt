@@ -90,6 +90,7 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_buscando_dispositivos_wifi)
+
         sharedpreferences = getSharedPreferences(PREFERENCES_DATE, AppCompatActivity.MODE_PRIVATE)
         bm = getSystemService(AppCompatActivity.BATTERY_SERVICE) as BatteryManager
 
@@ -228,7 +229,6 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
                 ingredient.setDate(map["date"])
                 if (!isObjectInArray(wifiP2pDevice.deviceAddress)) {
                     ingredients!!.add(ingredient)
-                    Log.v("Sergio","$ingredients")
 
                     val arrayList: ArrayList<Ingredient>? = ingredients
 
@@ -368,7 +368,6 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
     }
 
     private fun setMap() {
-        //record!!["nameApp"] = "conecta2"
         val lm = getSystemService(AppCompatActivity.LOCATION_SERVICE) as LocationManager
         if (ActivityCompat.checkSelfPermission(
                 this,
@@ -446,7 +445,6 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
 
     private fun boton(){
         alarma.apagarTemporizador(playPausar,mp,this@BuscandoDispositivosWifi)
-
         val intent = Intent(this, BuscandoDispositivosWifi::class.java)
         wifiManager!!.isWifiEnabled = false
         finish()
