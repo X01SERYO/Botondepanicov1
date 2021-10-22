@@ -115,8 +115,10 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
         permanecer = !permanecer
         if (permanecer){
             onOffCambioAutomatico.text = ("Si")
+            terminarActividad = 1
         }else{
             onOffCambioAutomatico.text = ("No")
+            cambioActividad(true)
         }
     }
 

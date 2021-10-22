@@ -135,8 +135,11 @@ public class BuscandoDispositivosBluetooth extends AppCompatActivity implements 
         permanecerBlue = !permanecerBlue;
         if (permanecerBlue){
             onOffCambioAutomaticoBlue.setText("Si");
+            terminarActividadBlue = 1;
         }else{
             onOffCambioAutomaticoBlue.setText("No");
+
+            cambioActividad(true);
         }
     }
 
