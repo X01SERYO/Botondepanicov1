@@ -3,7 +3,6 @@ package com.example.botondepanicov1.wifi_direct
 import android.Manifest
 import android.app.ProgressDialog
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.database.DataSetObserver
@@ -30,6 +29,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.botondepanicov1.AlarmaSonora
 import com.example.botondepanicov1.R
+import com.example.botondepanicov1.bluetooth.BuscandoDispositivosBluetooth
 import kotlinx.android.synthetic.main.activity_buscando_dispositivos_wifi.*
 import java.util.*
 import kotlin.math.abs
@@ -72,9 +72,6 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
     val PREFERENCES_DATE = "saveDate"
     private var sharedpreferences: SharedPreferences? = null
 
-    //Inicialización nivel bateria
-    private var globalLevel = 0
-
     //Terminar activiadd
     private var terminarActividad = 0
 
@@ -86,6 +83,10 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
     //Nombre Dispositivo
     private lateinit var nombreDispositivo: String
 
+    //Variables para permaneer en la actividad
+    private lateinit var onOffCambioAutomatico : Button
+    private var permanecer = false
+
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,17 +95,13 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
         sharedpreferences = getSharedPreferences(PREFERENCES_DATE, AppCompatActivity.MODE_PRIVATE)
         bm = getSystemService(AppCompatActivity.BATTERY_SERVICE) as BatteryManager
 
-        val ifilter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
-        val batteryStatus = this.registerReceiver(null, ifilter)
-        val level = batteryStatus!!.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
-        val scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
-        globalLevel = (level * 100 / scale.toFloat()).toInt()
+        onOffCambioAutomatico = findViewById(R.id.onOffAutoWifi)
+        onOffCambioAutomatico.text = ("No")
 
         playPausar = findViewById(R.id.alarma)
         mp = MediaPlayer.create(this,R.raw.alarma_sonora)
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        Log.d("Sergio","INCIO ACTIVIDAD " + prefs.getString(keyAlarma,"No hay datos").toString())
 
         nombreDispositivo = "Dispositivo: ${Build.MANUFACTURER.toUpperCase(Locale.ROOT)} ${Build.MODEL}"
 
@@ -112,9 +109,15 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
         alarma.estadoPreferencia(playPausar,mp,this)
         inicio()
         iniciarCuenta()
-        Log.d("Sergio", "fin")
+    }
 
-
+    fun onClickOnOffCambioAutomatico(view : View){
+        permanecer = !permanecer
+        if (permanecer){
+            onOffCambioAutomatico.text = ("Si")
+        }else{
+            onOffCambioAutomatico.text = ("No")
+        }
     }
 
     override fun onBackPressed() {
@@ -168,7 +171,6 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
 
         handler.postDelayed(Runnable {
             val pref = PreferenceManager.getDefaultSharedPreferences(this)
-            Log.v("Sergio","Pref " + pref.getString(key, nombreDispositivo).toString())
             (record as HashMap<Any?, Any?>)["longitude"] = longitude.toString()
             (record as HashMap<Any?, Any?>)["latitude"] = latitude.toString()
             (record as HashMap<Any?, Any?>)["date"] = codificator.dateToString(Date())//
@@ -399,40 +401,6 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
         override fun onProviderDisabled(s: String) {}
     }
 
-    /*private fun listSort(lista: ArrayList<Ingredient>?): ArrayList<Ingredient>? {
-        val copy: ArrayList<Ingredient>? = lista
-        var name = ""
-        var mac = ""
-        var distance = 0.0
-        var indice = ""
-        var date = ""
-        for (i in copy!!.indices) for (j in i + 1 until copy.size) if (java.lang.Double.valueOf(copy[i].getIndice()) < java.lang.Double.valueOf(
-                copy[j].getIndice()
-            )
-        ) {
-            name = copy[j].getName().toString()
-            mac = copy[j].getMac().toString()
-            distance = copy[j].getDistance()
-            indice = copy[j].getIndice().toString()
-            date = copy[j].getDate().toString()
-
-            //copy.get(j).equals(copy.get(i));
-            copy[j].setName(copy[i].getName())
-            copy[j].setMac(copy[i].getMac())
-            copy[j].setDistance(copy[i].getDistance())
-            copy[j].setIndice(copy[i].getIndice())
-            copy[j].setDate(copy[i].getDate())
-
-            //copy.get(i).equals(temp);
-            copy[i].setName(name)
-            copy[i].setMac(mac)
-            copy[i].setDistance(distance)
-            copy[i].setIndice(indice)
-            copy[i].setDate(date)
-        }
-        return copy
-    }*/
-
     private fun calculateX(otherLongitude: Double): Float {
         val finalX: Double = (abs(longitude) - abs(otherLongitude)) * (10000 * distance * 5)
         return finalX.toFloat()
@@ -443,9 +411,13 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
         return finalY.toFloat()
     }
 
-    private fun boton(){
-        alarma.apagarTemporizador(playPausar,mp,this@BuscandoDispositivosWifi)
-        val intent = Intent(this, BuscandoDispositivosWifi::class.java)
+    private fun cambioActividad(permanecer : Boolean){
+        alarma.apagarTemporizador(playPausar,mp,this)
+        val intent :Intent = if(permanecer){
+            Intent(this, BuscandoDispositivosWifi::class.java)
+        }else{
+            Intent(this, BuscandoDispositivosBluetooth::class.java)
+        }
         wifiManager!!.isWifiEnabled = false
         finish()
         startActivity(intent)
@@ -453,19 +425,19 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
 
     fun iniciarCuenta() {
         val tiempo: Long = calclarTiempo()
-        Log.d("Sergio", "$tiempo inicio")
+        Log.d("Sergio", "$tiempo inicio wifi")
         //10000 equivale a diez segunodos de intervlo de descuento
         object : CountDownTimer(tiempo, 10000) {
             override fun onTick(millisUntilFinished: Long) {
                 val tiempoF = millisUntilFinished / 1000
                 val minutosF = (tiempoF / 60).toInt()
                 val segundosF = tiempoF % 60
-                Log.d("Sergio", "$minutosF:$segundosF -- $terminarActividad")
+                Log.d("Sergio", "$minutosF:$segundosF -- terminar $terminarActividad -- Permanecer $permanecer")
             }
 
             override fun onFinish() {
                 if(terminarActividad == 0){
-                    boton()
+                    cambioActividad(permanecer)
                 }
             }
         }.start()
@@ -481,43 +453,12 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
         return  numero.toLong()
     }
 
-    private fun bateria(): Long {
-        Log.d("Sergio", " batery$globalLevel")
-        var tiempo: Long = 20000
-        if (globalLevel in 81..100) {
-            Log.d("Sergio", " 100>=global_level | global_level>80")
-            //40 segundos
-            tiempo = (20 * 1000).toLong()
-        } else if (globalLevel in 61..80) {
-            Log.d("Sergio", " 80>=global_level && global_level>60")
-            //20 segundos
-            tiempo = (40 * 1000).toLong()
-        } else if (globalLevel in 41..60) {
-            Log.d("Sergio", " 60>=global_level && global_level>40")
-            //1 minuto
-            tiempo = (60 * 1000).toLong()
-        } else if (globalLevel in 21..40) {
-            Log.d("Sergio", " 40>=global_level && global_level>20")
-            //1 minuto y 30 segundo
-            tiempo = (60 * 1000 + 30 * 1000).toLong()
-        } else if (globalLevel in 11..20) {
-            Log.d("Sergio", " 20>=global_level && global_level>10")
-            //2 minuto
-            tiempo = (2 * 60 * 1000).toLong()
-        } else if (globalLevel in 1..10) {
-            Log.d("Sergio", " 10>=global_level && global_level>0")
-            //2 minuto y 30 segundo
-            tiempo = (2 * 60 * 1000 + 30 * 1000).toLong()
-        }
-        return tiempo
-    }
-
     fun onClickAlarma(view : View){
         alarma.reproducirParar(playPausar,mp,this)
     }
 
     fun onClickRefrescar(view: View){
         terminarActividad = 1
-        boton()
+        cambioActividad(true)
     }
 }

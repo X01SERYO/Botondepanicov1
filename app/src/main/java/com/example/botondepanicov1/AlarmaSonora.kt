@@ -1,5 +1,6 @@
 package com.example.botondepanicov1
 
+import android.content.Context
 import android.media.MediaPlayer
 import android.preference.PreferenceManager
 import android.util.Log
@@ -10,12 +11,12 @@ class AlarmaSonora {
 
     private var keyAlarma: String = "ALARMA"
 
-    fun apagarTemporizador(playPausar:Button, mp:MediaPlayer, context: BuscandoDispositivosWifi){
+    fun apagarTemporizador(playPausar:Button, mp:MediaPlayer, context: Context){
         mp.stop()
         playPausar.text = ("ACTIVAR ALARMA")
     }
 
-    fun apagarFinActividad(playPausar:Button, mp:MediaPlayer, context: BuscandoDispositivosWifi){
+    fun apagarFinActividad(playPausar:Button, mp:MediaPlayer, context: Context){
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         val editor = prefs.edit()
 
@@ -25,7 +26,7 @@ class AlarmaSonora {
         editor.apply()
     }
 
-    fun reproducirParar(playPausar:Button, mp:MediaPlayer, context: BuscandoDispositivosWifi){
+    fun reproducirParar(playPausar:Button, mp:MediaPlayer, context: Context){
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         val editor = prefs.edit()
 
@@ -45,7 +46,7 @@ class AlarmaSonora {
         }
     }
 
-    fun estadoPreferencia(playPausar:Button, mp:MediaPlayer, context: BuscandoDispositivosWifi){
+    fun estadoPreferencia(playPausar:Button, mp:MediaPlayer, context: Context){
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
 
         Log.d("Sergio","INCIO fun estadoPreferencia " + prefs.getString(keyAlarma,"No hay datos").toString())
