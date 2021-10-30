@@ -441,7 +441,7 @@
                     android:backgroundTint="#397B6E"
                     android:baselineAligned="false"
                     android:onClick="onClickRegistrar"
-                    android:text="REGISTRAME"
+                    android:text="REGISTRARME"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

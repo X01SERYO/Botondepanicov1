@@ -9,10 +9,12 @@
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="250dp"
+        android:layout_width="0dp"
+        android:layout_height="275dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:background="#FFFFFF"
         app:layout_constraintEnd_toStartOf="@+id/onOffAutoWifi"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -26,22 +28,23 @@
 
             <ImageButton
                 android:id="@+id/ownDevice"
-                android:layout_width="50px"
-                android:layout_height="50px"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_centerInParent="true"
-                android:background="@drawable/ic_launcher_foreground"
+                android:background="@drawable/persona"
                 android:textSize="8sp"
                 android:visibility="visible"
                 tools:ignore="SpeakableTextPresentCheck" />
 
             <TextView
                 android:id="@+id/textView"
-                android:layout_width="match_parent"
+                android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"
-                android:text="   Yo"
+                android:gravity="center"
+                android:text="YO"
                 android:textColor="@color/black"
-                android:textSize="8sp" />
+                android:textSize="10dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -57,7 +60,7 @@
                 android:layout_width="50px"
                 android:layout_height="50px"
                 android:layout_centerInParent="true"
-                android:background="@drawable/locationblue"
+                android:background="@drawable/locationblack"
                 android:textSize="8sp" />
 
             <TextView
@@ -109,7 +112,7 @@
                 android:layout_width="50px"
                 android:layout_height="50px"
                 android:layout_centerInParent="true"
-                android:background="@drawable/locationblue"
+                android:background="@drawable/locationlemon"
                 android:textSize="8sp" />
 
             <TextView
@@ -135,7 +138,7 @@
                 android:layout_width="50px"
                 android:layout_height="50px"
                 android:layout_centerInParent="true"
-                android:background="@drawable/locationblue"
+                android:background="@drawable/locationorange"
                 android:textSize="8sp" />
 
             <TextView
@@ -161,7 +164,7 @@
                 android:layout_width="50px"
                 android:layout_height="50px"
                 android:layout_centerInParent="true"
-                android:background="@drawable/locationblue"
+                android:background="@drawable/locationpink"
                 android:textSize="8sp" />
 
             <TextView
@@ -187,7 +190,7 @@
                 android:layout_width="50px"
                 android:layout_height="50px"
                 android:layout_centerInParent="true"
-                android:background="@drawable/locationblue"
+                android:background="@drawable/locationred"
                 android:textSize="8sp" />
 
             <TextView
@@ -213,7 +216,7 @@
                 android:layout_width="50px"
                 android:layout_height="50px"
                 android:layout_centerInParent="true"
-                android:background="@drawable/locationblue"
+                android:background="@drawable/locationwine"
                 android:textSize="8sp" />
 
             <TextView
@@ -239,7 +242,7 @@
                 android:layout_width="50px"
                 android:layout_height="50px"
                 android:layout_centerInParent="true"
-                android:background="@drawable/locationblue"
+                android:background="@drawable/locationyellow"
                 android:textSize="8sp" />
 
             <TextView
@@ -265,7 +268,7 @@
                 android:layout_width="50px"
                 android:layout_height="50px"
                 android:layout_centerInParent="true"
-                android:background="@drawable/locationblue"
+                android:background="@drawable/locatonviolet"
                 android:textSize="8sp" />
 
             <TextView
@@ -291,7 +294,7 @@
                 android:layout_width="50px"
                 android:layout_height="50px"
                 android:layout_centerInParent="true"
-                android:background="@drawable/locationblue"
+                android:background="@drawable/locationlightblue"
                 android:textSize="8sp" />
 
             <TextView
@@ -328,57 +331,71 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Cambiar"
+        app:layout_constraintEnd_toEndOf="@+id/onOffAutoWifi"
+        app:layout_constraintStart_toStartOf="@+id/onOffAutoWifi"
+        app:layout_constraintTop_toBottomOf="@+id/onOffAutoWifi" />
+
+    <ImageButton
+        android:id="@+id/cambioBlue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/bordes_redondos"
+        android:onClick="onClickCambiarBluetooth"
+        android:paddingStart="5dp"
+        android:paddingLeft="5dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="5dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="5dp"
+        android:src="@drawable/bluetooth"
+        app:layout_constraintEnd_toEndOf="@+id/textView5"
+        app:layout_constraintStart_toStartOf="@+id/textView5"
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
     <Button
-        android:id="@+id/alarma"
+        android:id="@+id/alarmaWifi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="8dp"
-        android:background="#166265"
         android:onClick="onClickAlarma"
         android:text="Activar alarma"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
 
     <Button
-        android:id="@+id/refrescar"
+        android:id="@+id/recargarWifi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="5dp"
-        android:background="#166265"
         android:onClick="onClickRefrescar"
-        android:text="refrescar"
+        android:text="Recargar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
 
-<!--    <Button
-        android:id="@+id/cambiar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="8dp"
-        android:background="#166265"
-        android:onClick="onClickAlarma"
-        android:text="Ir a Bluetooth"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/refrescar" />
--->
     <ListView
         android:id="@+id/FndListIdMap"
         style="@style/Widget.AppCompat.Light.ListView.DropDown"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
         android:background="#95E0E3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/refrescar">
+        app:layout_constraintTop_toBottomOf="@+id/alarmaWifi">
 
     </ListView>
 

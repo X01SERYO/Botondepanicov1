@@ -98,7 +98,7 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
         onOffCambioAutomatico = findViewById(R.id.onOffAutoWifi)
         onOffCambioAutomatico.text = ("No")
 
-        playPausar = findViewById(R.id.alarma)
+        playPausar = findViewById(R.id.alarmaWifi)
         mp = MediaPlayer.create(this,R.raw.alarma_sonora)
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
@@ -107,11 +107,24 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
 
 
         alarma.estadoPreferencia(playPausar,mp,this)
+        activarWifiAndroidMayorDiez()
         inicio()
         iniciarCuenta()
     }
 
+    fun activarWifiAndroidMayorDiez(){
+        wifiManager = this.applicationContext.getSystemService(AppCompatActivity.WIFI_SERVICE) as WifiManager
+        if(!wifiManager!!.isWifiEnabled){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val panelIntent = Intent(Settings.Panel.ACTION_INTERNET_CONNECTIVITY)
+                startActivityForResult(panelIntent, 545)
+            }
+        }
+
+    }
+
     fun onClickOnOffCambioAutomatico(view : View){
+
         permanecer = !permanecer
         if (permanecer){
             onOffCambioAutomatico.text = ("Si")
@@ -328,6 +341,8 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
 
     }
 
+
+
     private fun isObjectInArray(deviceAddress: String): Boolean {
         val result = false
         for (ingredient in ingredients!!) {
@@ -462,5 +477,10 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
     fun onClickRefrescar(view: View){
         terminarActividad = 1
         cambioActividad(true)
+    }
+
+    fun onClickCambiarBluetooth(view: View){
+        terminarActividad = 1
+        cambioActividad(false)
     }
 }

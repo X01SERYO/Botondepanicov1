@@ -83,16 +83,16 @@ ArrayAdapter<Ingredient>(context, resource) {
         indice.text = "" + ingredient.getIndice()
         if (row != null) {
             when (position) {
-                0 -> imageView.background = row.resources.getDrawable(R.drawable.locationblue)
+                0 -> imageView.background = row.resources.getDrawable(R.drawable.locationblack)
                 1 -> imageView.background = row.resources.getDrawable(R.drawable.locationblue)
-                2 -> imageView.background = row.resources.getDrawable(R.drawable.locationblue)
-                3 -> imageView.background = row.resources.getDrawable(R.drawable.locationblue)
-                4 -> imageView.background = row.resources.getDrawable(R.drawable.locationblue)
-                5 -> imageView.background = row.resources.getDrawable(R.drawable.locationblue)
-                6 -> imageView.background = row.resources.getDrawable(R.drawable.locationblue)
-                7 -> imageView.background = row.resources.getDrawable(R.drawable.locationblue)
-                8 -> imageView.background = row.resources.getDrawable(R.drawable.locationblue)
-                9 -> imageView.background = row.resources.getDrawable(R.drawable.locationblue)
+                2 -> imageView.background = row.resources.getDrawable(R.drawable.locatonviolet)
+                3 -> imageView.background = row.resources.getDrawable(R.drawable.locationorange)
+                4 -> imageView.background = row.resources.getDrawable(R.drawable.locationpink)
+                5 -> imageView.background = row.resources.getDrawable(R.drawable.locationred)
+                6 -> imageView.background = row.resources.getDrawable(R.drawable.locationwine)
+                7 -> imageView.background = row.resources.getDrawable(R.drawable.locationyellow)
+                8 -> imageView.background = row.resources.getDrawable(R.drawable.locationlemon)
+                9 -> imageView.background = row.resources.getDrawable(R.drawable.locationlightblue)
             }
         }
         return row

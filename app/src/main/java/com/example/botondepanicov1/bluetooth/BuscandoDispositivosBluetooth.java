@@ -99,27 +99,6 @@ public class BuscandoDispositivosBluetooth extends AppCompatActivity implements 
                 .setBeaconLayout("m:2-3=beac,i:4-19,i:20-21,i:22-23,p:24-24,d:25-25"));
 
         inicioDescubrimiento();
-        buscar = findViewById(R.id.buscar);
-        buscar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(buscar.isClickable()){
-                    buscar.setClickable(true);
-                    beaconManager.bind(BuscandoDispositivosBluetooth.this);
-                }else{
-                    buscar.setClickable(false);
-                    beaconManager.unbind(BuscandoDispositivosBluetooth.this);
-                }
-            }
-        });
-
-        Button parar = findViewById(R.id.parar);
-        parar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                beaconManager.unbind(BuscandoDispositivosBluetooth.this);
-            }
-        });
     }
 
     @Override
@@ -128,7 +107,7 @@ public class BuscandoDispositivosBluetooth extends AppCompatActivity implements 
         alarma.apagarFinActividad(playPausar,mp,this);
         beaconManager.unbind(BuscandoDispositivosBluetooth.this);
         Log.d("Sergio", "terminarActividad = "+terminarActividadBlue);
-        finish();
+        this.finish();
     }
 
     public  void onClickOnOffCambioAutomatico(View view){
@@ -166,11 +145,11 @@ public class BuscandoDispositivosBluetooth extends AppCompatActivity implements 
             Log.i(TAG, "isBlueToothOn");
             transmitIBeacon();
         } else if (!isBluetoothLEAvailable()) {
-            Toast toast = Toast.makeText(this, "Bluetooth not available on your device",Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(this, "Bluetooth no disponible en su dispositivo.",Toast.LENGTH_LONG);
             toast.show();
         } else {
             Log.i(TAG, "BlueTooth is off");
-            Toast toast = Toast.makeText(this, "Please enable bluetooth before transmit iBeacon.",Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(this, "Habilite bluetooth antes de transmitir iBeacon.",Toast.LENGTH_LONG);
             toast.show();
         }
     }
@@ -201,7 +180,7 @@ public class BuscandoDispositivosBluetooth extends AppCompatActivity implements 
 
             }
         } else {
-            Toast toast = Toast.makeText(this, "Your device is not support leBluetooth.",Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(this, "Su dispositivo no es compatible con LE Bluetooth.",Toast.LENGTH_LONG);
             toast.show();
         }
     }
@@ -365,5 +344,10 @@ public class BuscandoDispositivosBluetooth extends AppCompatActivity implements 
     public void onClickRefrescarBlue(View view){
         terminarActividadBlue = 1;
         cambioActividad(true);
+    }
+
+    public void onClickCambiarWifiDirect(View view){
+        terminarActividadBlue = 1;
+        cambioActividad(false);
     }
 }

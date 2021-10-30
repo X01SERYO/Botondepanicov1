@@ -3,6 +3,9 @@ package com.example.botondepanicov1
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.util.Log
 
@@ -59,9 +62,18 @@ class Registro : AppCompatActivity() {
     }
 
     fun onClickRegistrar(v: View) {
-        //CONTROLAR QUE SI HAY ERROR, NO PASE A AUTENTIFICAR
-        if (falloRegistro()) {
-            autentificar()
+        val cm =
+            applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
+        val isConnected: Boolean = activeNetwork?.isConnectedOrConnecting == true
+        //Valida la conexion a internet
+        if (isConnected) {
+            //CONTROLAR QUE SI HAY ERROR, NO PASE A AUTENTIFICAR
+            if (falloRegistro()) {
+                autentificar()
+            }
+        } else {
+            mostrarErrorConexion()
         }
     }
 
@@ -116,6 +128,16 @@ class Registro : AppCompatActivity() {
             .setMessage("Gracias por confiar en nosotros")
             .setPositiveButton("Aceptar") { _, _ ->
                 finish()
+            }
+            .create()
+        dialog.show()
+    }
+
+    private fun mostrarErrorConexion() {
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Error")
+            .setMessage("Verifique su conexión a internet ")
+            .setPositiveButton("Aceptar") { _, _ ->
             }
             .create()
         dialog.show()
@@ -248,7 +270,7 @@ class Registro : AppCompatActivity() {
         } else {
             val edad = 10
             if (validacionEdad(fecha_nacimiento.text.toString()) < edad) {
-                error_fecha_nacimiento.text = ("Minimo debes tener $edad años ")
+                error_fecha_nacimiento.text = ("Minimo debe tener $edad años ")
                 error_fecha_nacimiento.error = ""
                 resultado = false
             } else {

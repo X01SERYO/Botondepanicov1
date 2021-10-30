@@ -1,7 +1,10 @@
 package com.example.botondepanicov1
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -9,6 +12,7 @@ import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import androidx.appcompat.app.AlertDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.FirebaseDatabase
@@ -77,10 +81,28 @@ class Login : AppCompatActivity() {
     }
 
     fun iniciarSesion(v: View) {
-        //CONTROLAR QUE SI HAY ERROR, NO PASE A AUTENTIFICAR
-        if (falloInisioDeSesion()) {
-            validacionFirebase()
+        val cm = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
+        val isConnected: Boolean = activeNetwork?.isConnectedOrConnecting == true
+        //Valida la conexion a internet
+        if (isConnected){
+            //CONTROLAR QUE SI HAY ERROR, NO PASE A AUTENTIFICAR
+            if (falloInisioDeSesion()) {
+                validacionFirebase()
+            }
+        } else {
+            mostrarErrorConexion()
         }
+    }
+
+    private fun mostrarErrorConexion() {
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Error")
+            .setMessage("Verifique su conexión a internet ")
+            .setPositiveButton("Aceptar") { _, _ ->
+            }
+            .create()
+        dialog.show()
     }
 
     private fun validacionFirebase() {
