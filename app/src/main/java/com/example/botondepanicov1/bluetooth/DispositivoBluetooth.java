@@ -1,24 +1,26 @@
 package com.example.botondepanicov1.bluetooth;
 
+import org.altbeacon.beacon.Identifier;
+
 import java.text.DecimalFormat;
 
 public class DispositivoBluetooth {
 
-    String nombre;
+    Identifier nombre;
     Double distancia;
     String fecha;
 
-    public DispositivoBluetooth(String nombre, Double distancia, String fecha) {
+    public DispositivoBluetooth(Identifier nombre, Double distancia, String fecha) {
         this.nombre = nombre;
         this.distancia = distancia;
         this.fecha = fecha;
     }
 
-    public String getNombre() {
+    public Identifier getNombre() {
         return nombre;
     }
 
-    public void setNombre(String nombre) {
+    public void setNombre(Identifier nombre) {
         this.nombre = nombre;
     }
 

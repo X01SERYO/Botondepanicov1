@@ -15,6 +15,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -39,11 +41,13 @@ import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 
+import java.net.NetworkInterface;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -72,10 +76,15 @@ public class BuscandoDispositivosBluetooth extends AppCompatActivity implements 
     private MediaPlayer mp;
     private final AlarmaSonora alarma = new AlarmaSonora();
 
+    //Direccion MAC
+    String mac;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buscando_dispositivos_bluetooth);
+
+        mac = trasformarMac();
 
         checkPermission();
         listaBluetooth = findViewById(R.id.listBluetooth);
@@ -99,6 +108,48 @@ public class BuscandoDispositivosBluetooth extends AppCompatActivity implements 
                 .setBeaconLayout("m:2-3=beac,i:4-19,i:20-21,i:22-23,p:24-24,d:25-25"));
 
         inicioDescubrimiento();
+    }
+
+    public static String trasformarMac(){
+        String mac = "";
+        String[] macArray = obtenerMac().split(":");
+        for(int i = 0; i<macArray.length;i++){
+            if(macArray[i].length()==1){
+                macArray[i] = macArray[i] + "0";
+            }
+        }
+
+        for( String i : macArray){
+            mac = mac + i;
+        }
+        return mac;
+    }
+
+    public static String obtenerMac() {
+        try {
+            List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface nif : all) {
+                if (!nif.getName().equalsIgnoreCase("wlan0")) continue;
+
+                byte[] macBytes = nif.getHardwareAddress();
+                if (macBytes == null) {
+                    return "";
+                }
+
+                StringBuilder res1 = new StringBuilder();
+                for (byte b : macBytes) {
+                    res1.append(Integer.toHexString(b & 0xFF) + ":");
+                }
+
+                if (res1.length() > 0) {
+                    res1.deleteCharAt(res1.length() - 1);
+                }
+                return res1.toString();
+            }
+        } catch (Exception ex) {
+            Log.e("Error", ex.getMessage());
+        }
+        return "";
     }
 
     @Override
@@ -187,7 +238,7 @@ public class BuscandoDispositivosBluetooth extends AppCompatActivity implements 
 
     private void setupBeacon() {
         beacon = new Beacon.Builder()
-                .setId1("954e6dac-5612-4642-b2d1-d253429db36b") // UUID for beacon
+                .setId1("954e6dac-5612-4642-b2d1-"+mac) // UUID for beacon
                 .setId2("5") // Major for beacon
                 .setId3("12") // Minor for beacon
                 .setManufacturer(0x004C) // Radius Networks.0x0118  Change this for other beacon layouts//0x004C for iPhone
@@ -205,7 +256,7 @@ public class BuscandoDispositivosBluetooth extends AppCompatActivity implements 
     @Override
     public void onBeaconServiceConnect() {
         final Region region = new Region("myBeaons", Identifier.parse("2f234454-cf6d-4a0f-adf2-f4911ba9ffa6"), null, null);
-        final Region region2 = new Region("myBeaons", Identifier.parse("954e6dac-5612-4642-b2d1-d253429db36b"), null, null);
+        final Region region2 = new Region("myBeaons", null, null, null);
 
         beaconManager.setMonitorNotifier(new MonitorNotifier() {
             @Override
@@ -290,6 +341,7 @@ public class BuscandoDispositivosBluetooth extends AppCompatActivity implements 
             intent = new Intent(this, BuscandoDispositivosWifi.class);
         }
         beaconManager.unbind(BuscandoDispositivosBluetooth.this);
+        btAdapter.disable();
         finish();
         startActivity(intent);
     }
@@ -309,11 +361,11 @@ public class BuscandoDispositivosBluetooth extends AppCompatActivity implements 
         @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String strDate = sdf.format(c.getTime());
         for(int i = 0; i<mLista.size();i++){
-            if(mLista.get(i).nombre.equals(oneBeacon.getBluetoothAddress())){
+            if(mLista.get(i).nombre.equals(oneBeacon.getId1())){
                 mLista.remove(i);
             }
         }
-        mLista.add(new DispositivoBluetooth(oneBeacon.getBluetoothAddress(),oneBeacon.getDistance(),strDate));
+        mLista.add(new DispositivoBluetooth(oneBeacon.getId1(),oneBeacon.getDistance(),strDate));
         return lista;
     }
 
