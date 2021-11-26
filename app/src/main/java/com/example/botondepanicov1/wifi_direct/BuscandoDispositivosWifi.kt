@@ -246,16 +246,14 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
                 ingredient.setDate(map["date"])
                 if (!isObjectInArray(wifiP2pDevice.deviceAddress)) {
                     ingredients!!.add(ingredient)
-
                     val arrayList: ArrayList<Ingredient>? = ingredients
 
                     adapter!!.clear()
                     for (i in arrayList!!.indices) {
                         adapter!!.add(arrayList[i])
                     }
+
                     lv!!.setSelection(adapter!!.count - 1)
-                    Log.d("Add device", java.lang.String.valueOf(adapter!!.count))
-                    Log.d("Add device", ingredient.name.toString() + " device")
                     when (ingredients!!.size) {
                         1 -> {
                             otherDevice.visibility = View.VISIBLE
@@ -430,6 +428,7 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
 
     private fun cambioActividad(permanecer : Boolean){
         alarma.apagarTemporizador(playPausar,mp,this)
+
         val intent :Intent = if(permanecer){
             Intent(this, BuscandoDispositivosWifi::class.java)
         }else{
@@ -483,4 +482,6 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
         terminarActividad = 1
         cambioActividad(false)
     }
+
+
 }

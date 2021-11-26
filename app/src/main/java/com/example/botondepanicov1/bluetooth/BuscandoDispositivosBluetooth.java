@@ -13,6 +13,7 @@ import android.bluetooth.le.AdvertiseCallback;
 import android.bluetooth.le.AdvertiseSettings;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.net.wifi.WifiInfo;
@@ -21,6 +22,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.RemoteException;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -78,14 +80,22 @@ public class BuscandoDispositivosBluetooth extends AppCompatActivity implements 
 
     //Direccion MAC
     String mac;
+    String KEY_MAC = "MAC";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buscando_dispositivos_bluetooth);
-
-        mac = trasformarMac();
-
+        //LEER PREFERENCIAS DE LA MAC
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences((Context)this);
+        String datos = String.valueOf(pref.getString(this.KEY_MAC, "No hay datos"));
+        Log.v("Sergio","MACKEY"+datos);
+        if (datos.equals("No hay datos")){
+            mac = trasformarMac();
+            guardarMacAleatoria(mac);
+        }{
+            mac = datos;
+        }
         checkPermission();
         listaBluetooth = findViewById(R.id.listBluetooth);
         btAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -112,17 +122,23 @@ public class BuscandoDispositivosBluetooth extends AppCompatActivity implements 
 
     public static String trasformarMac(){
         String mac = "";
-        String[] macArray = obtenerMac().split(":");
-        for(int i = 0; i<macArray.length;i++){
-            if(macArray[i].length()==1){
-                macArray[i] = macArray[i] + "0";
+        Log.v("Sergio", "uuid|" + obtenerMac().equals("")+"|");
+        if(obtenerMac().equals("")){
+            return alternativaMac();
+        }
+        else {
+            String[] macArray = obtenerMac().split(":");
+            for (int i = 0; i < macArray.length; i++) {
+                if (macArray[i].length() == 1) {
+                    macArray[i] = macArray[i] + "0";
+                }
             }
-        }
 
-        for( String i : macArray){
-            mac = mac + i;
+            for (String i : macArray) {
+                mac = mac + i;
+            }
+            return mac;
         }
-        return mac;
     }
 
     public static String obtenerMac() {
@@ -150,6 +166,25 @@ public class BuscandoDispositivosBluetooth extends AppCompatActivity implements 
             Log.e("Error", ex.getMessage());
         }
         return "";
+    }
+
+    public void guardarMacAleatoria(String mac){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences((Context)this);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(this.KEY_MAC, mac);
+        editor.apply();
+    }
+
+    public static String alternativaMac(){
+        return numeroAleatorio()+numeroAleatorio();
+    }
+
+    public static String numeroAleatorio(){
+        long min_val = 100000;
+        int max_val = 999999;
+        double randomNum = Math.random() * ( max_val - min_val );
+        System.out.println("Random Number: "+randomNum);
+        return String.valueOf( (int) randomNum);
     }
 
     @Override
@@ -237,8 +272,10 @@ public class BuscandoDispositivosBluetooth extends AppCompatActivity implements 
     }
 
     private void setupBeacon() {
+        String uuid = "954e6dac-5612-4642-b2d1-"+mac;
+        Log.v("Sergio","uuid "+uuid);
         beacon = new Beacon.Builder()
-                .setId1("954e6dac-5612-4642-b2d1-"+mac) // UUID for beacon
+                .setId1(uuid) // UUID for beacon
                 .setId2("5") // Major for beacon
                 .setId3("12") // Minor for beacon
                 .setManufacturer(0x004C) // Radius Networks.0x0118  Change this for other beacon layouts//0x004C for iPhone
@@ -341,7 +378,7 @@ public class BuscandoDispositivosBluetooth extends AppCompatActivity implements 
             intent = new Intent(this, BuscandoDispositivosWifi.class);
         }
         beaconManager.unbind(BuscandoDispositivosBluetooth.this);
-        btAdapter.disable();
+        //btAdapter.disable();
         finish();
         startActivity(intent);
     }

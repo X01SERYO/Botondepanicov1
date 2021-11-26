@@ -112,7 +112,7 @@
                 android:layout_width="50px"
                 android:layout_height="50px"
                 android:layout_centerInParent="true"
-                android:background="@drawable/locationlemon"
+                android:background="@drawable/locatonviolet"
                 android:textSize="8sp" />
 
             <TextView
@@ -268,7 +268,7 @@
                 android:layout_width="50px"
                 android:layout_height="50px"
                 android:layout_centerInParent="true"
-                android:background="@drawable/locatonviolet"
+                android:background="@drawable/locationlemon"
                 android:textSize="8sp" />
 
             <TextView
@@ -309,6 +309,14 @@
 
 
     </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:layout_constraintEnd_toEndOf="@+id/relativeLayout"
+        app:layout_constraintTop_toTopOf="@+id/relativeLayout"
+        app:srcCompat="@drawable/norte_mapa" />
 
     <TextView
         android:id="@+id/textView2"
