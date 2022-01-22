@@ -14,7 +14,7 @@ import androidx.core.content.ContextCompat
 import java.util.jar.Manifest
 
 class ValidacionPermisos {
-
+    //Valida permisos del GPS
     fun validacionUbicacion(context: Context) {
         //record!!["nameApp"] = "conecta2"
         val lm = context.getSystemService(AppCompatActivity.LOCATION_SERVICE) as LocationManager

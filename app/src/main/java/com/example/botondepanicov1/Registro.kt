@@ -25,27 +25,29 @@ import java.text.SimpleDateFormat
 
 
 class Registro : AppCompatActivity() {
-
+    //Variables para la conexion de FIREBASE
     private lateinit var dbReferenciaUser: DatabaseReference
     private lateinit var database: FirebaseDatabase
     private lateinit var auth: FirebaseAuth
+    //Variable para el correo
     private lateinit var email: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         title = "REGISTRO"
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registro)
+        //Llamada de funcion
         inicializarSpinnerDocumento()
         inicializarSpinnerGenero()
         inicializarSpinnerRh()
         inicializarSpinnerSigno()
-
+        //Inicializacion variables
         database = FirebaseDatabase.getInstance()
         auth = FirebaseAuth.getInstance()
-
+        //Se le inidca el PATH con el cual busca el FIREBASE
         dbReferenciaUser = database.reference.child("User")
     }
-
+    //Asinga la fecha actual al calendario
     @SuppressLint("SetTextI18n")
     fun onClickCalendario(v: View) {
         val c = Calendar.getInstance()
@@ -60,7 +62,7 @@ class Registro : AppCompatActivity() {
         )
         date.show()
     }
-
+    //Captura la accion btn registrar
     fun onClickRegistrar(v: View) {
         val cm =
             applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -76,7 +78,7 @@ class Registro : AppCompatActivity() {
             mostrarErrorConexion()
         }
     }
-
+    //Se sube ka información del usuario a FIREBASE
     @SuppressLint("CommitPrefEdits")
     private fun crearNuevaCuenta() {
         val persona = Persona()
@@ -107,7 +109,7 @@ class Registro : AppCompatActivity() {
             }
     }
 
-
+    //Valida que el ususario no este registrado, si no lo esta, lo crea. Si esta registrado arroja la alerta
     private fun autentificar() {
         FirebaseAuth.getInstance()
             .createUserWithEmailAndPassword(email, password.text.toString())
@@ -121,7 +123,7 @@ class Registro : AppCompatActivity() {
                 }
             }
     }
-
+    //Dialogo de registro exitoso
     private fun mostrarExitoRegistro() {
         val dialog = AlertDialog.Builder(this)
             .setTitle("Registro Exitoso")
@@ -132,7 +134,7 @@ class Registro : AppCompatActivity() {
             .create()
         dialog.show()
     }
-
+    //Dialogo de error en conexion
     private fun mostrarErrorConexion() {
         val dialog = AlertDialog.Builder(this)
             .setTitle("Error")
@@ -142,7 +144,7 @@ class Registro : AppCompatActivity() {
             .create()
         dialog.show()
     }
-
+    //Dialogo de error en registro
     private fun mostrarErrorRegistro() {
         val dialog = AlertDialog.Builder(this)
             .setTitle("Error")
@@ -154,7 +156,7 @@ class Registro : AppCompatActivity() {
 
         dialog.show()
     }
-
+    //Valida que todos los campos esten diligenciados
     private fun falloRegistro(): Boolean {
         var resultado = true
         email = ""
@@ -281,7 +283,7 @@ class Registro : AppCompatActivity() {
 
         return resultado
     }
-
+    //Resta entre la edad del usuario y la fecha actual
     @SuppressLint("SimpleDateFormat")
     private fun validacionEdad(fechaNacimiento: String): Int {
         val c = Calendar.getInstance()
@@ -297,7 +299,7 @@ class Registro : AppCompatActivity() {
 
         return fechaActual.year - fechaNacimiento.year
     }
-
+    //Inicializa la lista desplegable del signo del RH
     private fun inicializarSpinnerSigno() {
         val spinnerSigno = findViewById<Spinner>(R.id.signo)
         val listaSigno = resources.getStringArray(R.array.signo)
@@ -306,7 +308,7 @@ class Registro : AppCompatActivity() {
 
         spinnerSigno.adapter = adaptadorSigno
     }
-
+    //Inicializa la lista desplegable tipos de RH
     private fun inicializarSpinnerRh() {
         val spinnerRh = findViewById<Spinner>(R.id.rh)
         val listaRh = resources.getStringArray(R.array.rh)
@@ -315,7 +317,7 @@ class Registro : AppCompatActivity() {
 
         spinnerRh.adapter = adaptadorRh
     }
-
+    //Inicializa la lista desplegable del genero
     private fun inicializarSpinnerGenero() {
         val spinnerGenero = findViewById<Spinner>(R.id.gender)
         val listaGenero = resources.getStringArray(R.array.genero)
@@ -324,7 +326,7 @@ class Registro : AppCompatActivity() {
 
         spinnerGenero.adapter = adaptadorGenero
     }
-
+    //Inicializa la lista desplegable del tipo documento
     private fun inicializarSpinnerDocumento() {
         val spinnerDocumento = findViewById<Spinner>(R.id.document_type)
         val listaDocumento = resources.getStringArray(R.array.tipos_documento)

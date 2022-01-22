@@ -1,6 +1,8 @@
 package com.example.botondepanicov1
 
+//CLase para el  objeto persona
 class Persona {
+    //Atributos del objeto
     var tipoDocumento: String = ""
     var numeroDocumento: String = ""
     var nombres: String = ""
@@ -10,6 +12,7 @@ class Persona {
     var fechaNacimiento: String = ""
     var contrasenia: String = ""
 
+    //GETTERS AND SETTERS
     @JvmName("getTipoDocumento1")
     fun getTipoDocumento(): String {
         return this.tipoDocumento
@@ -91,6 +94,7 @@ class Persona {
         this.contrasenia = contrasenia
     }
 
+    //Concatena los datos para envairlos
     fun concatenado(): String {
         return "Tipo de documento: $tipoDocumento \nNúmero de documento: $numeroDocumento " +
                 "\nNombre: $nombres \nApellido: $apellidos \nGénero: $genero \nTipo de sangre: " +

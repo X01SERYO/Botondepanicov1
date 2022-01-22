@@ -22,9 +22,11 @@ import kotlinx.android.synthetic.main.activity_login.error_password
 import kotlinx.android.synthetic.main.activity_login.password
 
 class Login : AppCompatActivity() {
-
+    //Variable utilziada para el logueo
     lateinit var auth: FirebaseAuth
+    //Variable para guardar el correo
     private lateinit var email: String
+    //Variable para guardar en las preferecnias el logueo auto
     private var key: String = "MY_KEY"
     private var keyLogin: String = "LOGIN"
 
@@ -32,15 +34,16 @@ class Login : AppCompatActivity() {
         title = "BOTÓN DE PÁNICO"
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
+        //Validacon perisos ubicacion
         val validacionPermisos = ValidacionPermisos()
         validacionPermisos.validacionUbicacion(this)
-
+        //Llama la funcion
         iniciarSesionAutomatico()
         inicializarSpinnerDocumento()
+        //Intancia el objeto de autenticar
         auth = Firebase.auth
     }
-
+    //Captura los datos personales descargados de FIREBASE para guardar en las prefencias
     private fun capturarDatosPersona() {
         val mDatabase = FirebaseDatabase.getInstance().reference
         val documento = email.replace("@gmail.com","")
@@ -61,14 +64,14 @@ class Login : AppCompatActivity() {
             editor.apply()
         }
     }
-
+    //Guarda las credecnailes en preferencias
     fun capturarCredenciales(email: String, contrasenia: String) {
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         val editor = prefs.edit()
         editor.putString(keyLogin, "$email;$contrasenia")
         editor.apply()
     }
-
+    //Si ya ha iniciado ssesion, llama el metodo para no solictar de nuevo las credenciales
     fun iniciarSesionAutomatico() {
         val pref = PreferenceManager.getDefaultSharedPreferences(this)
         val datos = pref.getString(keyLogin, "No hay datos").toString()
@@ -79,7 +82,7 @@ class Login : AppCompatActivity() {
             startActivity(intent)
         }
     }
-
+    //solicita las credenciales para iniicar sesion por primera vez
     fun iniciarSesion(v: View) {
         val cm = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
@@ -94,7 +97,7 @@ class Login : AppCompatActivity() {
             mostrarErrorConexion()
         }
     }
-
+    //sms si no hay conexion a internet
     private fun mostrarErrorConexion() {
         val dialog = AlertDialog.Builder(this)
             .setTitle("Error")
@@ -104,7 +107,7 @@ class Login : AppCompatActivity() {
             .create()
         dialog.show()
     }
-
+    //valida que el usuario este creado en FIREBASE
     private fun validacionFirebase() {
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password.text.toString())
             .addOnCompleteListener {
@@ -120,12 +123,12 @@ class Login : AppCompatActivity() {
                 }
             }
     }
-
+    //sms por si el usuario y contraseña no coincide
     private fun credencialesInvalidas() {
         error_validacion.text = ("Credenciales invalidas")
         error_validacion.error = ""
     }
-
+    //validacion de campos vacios
     private fun falloInisioDeSesion(): Boolean {
         var resultado = true
         email = ""
@@ -160,7 +163,7 @@ class Login : AppCompatActivity() {
         }
         return resultado
     }
-
+    //inicializa una lista deplegable del tipo documento
     private fun inicializarSpinnerDocumento() {
         val spinnerDocumento = findViewById<Spinner>(R.id.document_type_login)
         val listaDocumento = resources.getStringArray(R.array.tipos_documento)
@@ -169,12 +172,12 @@ class Login : AppCompatActivity() {
 
         spinnerDocumento.adapter = adaptadorDocumento
     }
-
+    //captura accion boton de iniciar seion sin crenciales
     fun onClickInicarSesionSinCredenciales(v: View) {
         val intent = Intent(this, PantallaPrincipal::class.java)
         startActivity(intent)
     }
-
+    //captura accion boton de  registro
     fun onClickRegistro(v: View) {
         val intent = Intent(this, Registro::class.java)
         startActivity(intent)

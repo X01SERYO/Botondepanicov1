@@ -12,30 +12,31 @@ import android.util.Log
 
 
 class PantallaPrincipal : AppCompatActivity() {
-    private var key: String = "MY_KEY"
-    private var keyLogin: String = "LOGIN"
-    private var keyAlarma: String = "ALARMA"
+    //Variables usadas para las prefrencias
+    private var key: String = "MY_KEY"//Datos personales
+    private var keyLogin: String = "LOGIN"//Logueo auto
+    private var keyAlarma: String = "ALARMA"//Etsado alarma
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pantalla_principal)
 
-
+        //LLama funcion
         estadoAlarma()
     }
-
+    //Asigna INACTIVO a la alarma para que inicie apagda
     fun estadoAlarma(){
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         val editor = prefs.edit()
         editor.putString(keyAlarma, "Inactiva")
         editor.apply()
     }
-
+    //Captura accion boton solicitar ayuda
     fun onClickSolicitarAyuda(v:View){
         val intent = Intent(this, BuscandoDispositivosWifi::class.java)
         startActivity(intent)
     }
-
+    //Captura accion boton cerrar sesion
     fun onClickCerrarSesion(v:View){
         finish()
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
