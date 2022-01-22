@@ -17,6 +17,7 @@ import java.util.List;
 
 public class AdapterBluetooth extends ArrayAdapter<DispositivoBluetooth> {
 
+        //variables para las lista de los dispositivos bluetooth
 private final List<DispositivoBluetooth> miLista;
 private final Context mContext;
 private final int resourceLayout;
@@ -31,6 +32,7 @@ public AdapterBluetooth(@NonNull Context context, int resource, List<Dispositivo
 @SuppressLint("SetTextI18n")
 @NonNull
 @Override
+//muestra los dispositivos bluetooth con sus losn datos recibidos
 public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View view = convertView;
         if( view == null){
@@ -43,7 +45,13 @@ public View getView(int position, @Nullable View convertView, @NonNull ViewGroup
         nombre.setText("Dispositivo: " + dispostivo.getNombre());
 
         TextView distancia = view.findViewById(R.id.distancia);
-        distancia.setText("Distancia: " + dispostivo.getDistancia().toString() + "metros");
+        if (dispostivo.getDistancia() < 0){
+                distancia.setText("Distancia: " + 0 + "metros");
+        }
+        else{
+                distancia.setText("Distancia: " + dispostivo.getDistancia().toString() + "metros");
+        }
+
 
         TextView indice = view.findViewById(R.id.indice);
         indice.setText("Fecha de actualización: ");

@@ -4,6 +4,7 @@ import org.altbeacon.beacon.Identifier;
 
 import java.text.DecimalFormat;
 
+// clase del objeto Bluetooth
 public class DispositivoBluetooth {
 
     Identifier nombre;

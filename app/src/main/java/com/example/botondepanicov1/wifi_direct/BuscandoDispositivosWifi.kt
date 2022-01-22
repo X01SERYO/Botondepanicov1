@@ -112,6 +112,7 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
         iniciarCuenta()
     }
 
+    //activar el modulo de WIFi para las versionde de android iguales o mayores a 10
     fun activarWifiAndroidMayorDiez(){
         wifiManager = this.applicationContext.getSystemService(AppCompatActivity.WIFI_SERVICE) as WifiManager
         if(!wifiManager!!.isWifiEnabled){
@@ -123,6 +124,7 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
 
     }
 
+    // captura la accion del boton para permanecer el WIFI Direct
     fun onClickOnOffCambioAutomatico(view : View){
 
         permanecer = !permanecer
@@ -135,13 +137,14 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
         }
     }
 
+        // termina la actividad y apaga alarma
     override fun onBackPressed() {
         terminarActividad = 1
         alarma.apagarFinActividad(playPausar,mp,this)
         Log.d("Sergio", "terminarActividad = $terminarActividad")
         finish()
     }
-
+    // configuración de WIFI Direct
     private fun inicio(){
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
             PackageManager.PERMISSION_GRANTED &&
@@ -246,14 +249,16 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
                 ingredient.setDate(map["date"])
                 if (!isObjectInArray(wifiP2pDevice.deviceAddress)) {
                     ingredients!!.add(ingredient)
+
                     val arrayList: ArrayList<Ingredient>? = ingredients
 
                     adapter!!.clear()
                     for (i in arrayList!!.indices) {
                         adapter!!.add(arrayList[i])
                     }
-
                     lv!!.setSelection(adapter!!.count - 1)
+                    Log.d("Add device", java.lang.String.valueOf(adapter!!.count))
+                    Log.d("Add device", ingredient.name.toString() + " device")
                     when (ingredients!!.size) {
                         1 -> {
                             otherDevice.visibility = View.VISIBLE
@@ -351,6 +356,7 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
         return result
     }
 
+
     private fun calclateDistance(otherLongitude: Double, otherLatitude: Double): Float {
         val loc1 = Location("")
         loc1.latitude = otherLatitude
@@ -425,10 +431,9 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
         val finalY: Double = (abs(latitude) - abs(otherLatitude)) * (10000 * distance * 5)
         return finalY.toFloat()
     }
-
+    // valida si el boton de permanecer está en NO para hacer cambio automatico
     private fun cambioActividad(permanecer : Boolean){
         alarma.apagarTemporizador(playPausar,mp,this)
-
         val intent :Intent = if(permanecer){
             Intent(this, BuscandoDispositivosWifi::class.java)
         }else{
@@ -438,7 +443,7 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
         finish()
         startActivity(intent)
     }
-
+    // se inicaliza el temporizador ya lterminar valida la variable terminar actividad para llamar la funcion cambiar actividad
     fun iniciarCuenta() {
         val tiempo: Long = calclarTiempo()
         Log.d("Sergio", "$tiempo inicio wifi")
@@ -459,6 +464,7 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
         }.start()
     }
 
+    // calcula el tiempo del temporizador por medio de una distribucion normal
     private fun calclarTiempo():Long{
         val gauss = Random()
         val numeroAleaorio = gauss.nextGaussian().toInt()
@@ -469,19 +475,20 @@ class BuscandoDispositivosWifi : AppCompatActivity(){
         return  numero.toLong()
     }
 
+    // boton para encender o apagar alarma
     fun onClickAlarma(view : View){
         alarma.reproducirParar(playPausar,mp,this)
     }
 
+    //recaargar la actividad
     fun onClickRefrescar(view: View){
         terminarActividad = 1
         cambioActividad(true)
     }
 
+    //boton para cambiar de tecnologia
     fun onClickCambiarBluetooth(view: View){
         terminarActividad = 1
         cambioActividad(false)
     }
-
-
 }
